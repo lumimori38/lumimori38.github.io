@@ -1,38 +1,269 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>lumimori38 | 최애 덕질 생존기</title>
-  <meta name="description" content="최애 덕질 생존기 - 7년간 최애를 지켜라! 내 최애 이름으로 플레이하는 8비트 K-POP 덕질 시뮬레이션 무료 웹게임 · 엔딩 8종">
-  <meta name="keywords" content="최애 덕질 생존기, 덕질 게임, 아이돌 게임, 케이팝 게임, K-POP 게임, 무료 웹게임, 도트 게임">
-  <meta name="robots" content="index, follow">
-  <!-- 네이버 인증 메타태그를 쓸 경우 아래 줄을 받은 코드로 교체하세요 -->
-  <!-- <meta name="naver-site-verification" content="여기에_네이버_코드"> -->
-  <meta property="og:type" content="website">
-  <meta property="og:title" content="최애 덕질 생존기 - 7년간 최애를 지켜라!">
-  <meta property="og:description" content="수많은 응원봉 중 하나였던 나, 7년 뒤 너에게 나는 어떤 이름으로 남을까?">
-  <meta property="og:image" content="https://lumimori38.github.io/deokjil-survival/og-image.png">
-  <meta property="og:url" content="https://lumimori38.github.io/">
-  <style>
-    body{margin:0;min-height:100vh;display:flex;align-items:center;justify-content:center;background:#1e0836;color:#fff;font-family:'Apple SD Gothic Neo','Malgun Gothic',sans-serif;text-align:center;
-      background-image:radial-gradient(#ffffff40 2px,transparent 2px);background-size:40px 40px}
-    .box{padding:32px 24px;max-width:420px}
-    .tag{display:inline-block;background:#ff0055;padding:4px 12px;font-weight:900;font-size:13px;border:3px solid #0f0b29}
-    h1{font-size:40px;margin:18px 0 6px;line-height:1.2;text-shadow:3px 3px 0 #ff0055}
-    h1 span{color:#00ffff} h1 b{color:#ffe600}
-    p{color:#fbcfe8;line-height:1.6}
-    a.play{display:inline-block;margin-top:18px;background:#ffe600;color:#0f0b29;font-weight:900;font-size:20px;padding:14px 28px;border:4px solid #0f0b29;box-shadow:5px 5px 0 #ff0055;text-decoration:none}
-    .by{margin-top:28px;font-size:13px;color:#c4b5fd}.by a{color:#ff7aa8}
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>lumimori38 | B급 테스트·게임 오락실</title>
+<meta name="description" content="lumimori38이 만든 B급 테스트와 웹게임 모음 — 최애 덕질 생존기, AI 안경 끼고 시험 보면 생기는 일">
+<meta name="keywords" content="최애 덕질 생존기, 덕질 게임, 아이돌 게임, K-POP 게임, 무료 웹게임, 도트 게임, AI 안경 테스트, 커닝 지능 테스트, 심리테스트, 유형테스트">
+<meta name="robots" content="index, follow">
+<meta property="og:type" content="website">
+<meta property="og:title" content="lumimori38 오락실 — B급 테스트·게임 모음">
+<meta property="og:description" content="최애 덕질 생존기 · AI 안경 끼고 시험 보면 생기는 일 · 그리고 계속 추가 중">
+<meta property="og:image" content="https://lumimori38.github.io/og-hub.png">
+<meta property="og:url" content="https://lumimori38.github.io/">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:creator" content="@lumimori38">
+<meta name="twitter:image" content="https://lumimori38.github.io/og-hub.png">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/galmuri@2.40.3/dist/galmuri.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+<style>
+  :root{
+    --bg:#f6efe6;
+    --ink:#211a3a;
+    --ink-soft:#6b6385;
+    --shell:#ffd23f;
+    --shell-dark:#e2ad12;
+    --screen:#1b1630;
+    --lcd:#9bff6b;
+    --pink:#ff4f9a;
+    --mint:#2bd47d;
+    --sky:#4fc3ff;
+    --yellow:#ffd23f;
+    --pixel:'Galmuri11','Galmuri9',monospace;
+    --sans:'Pretendard','Apple SD Gothic Neo','Malgun Gothic',sans-serif;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+  html{background:var(--bg)}
+  body{font-family:var(--sans);color:var(--ink);min-height:100vh;
+    background:
+      radial-gradient(rgba(33,26,58,.07) 1.2px, transparent 1.2px) 0 0/18px 18px,
+      var(--bg)}
+  a{color:inherit;text-decoration:none}
+  .wrap{max-width:760px;margin:0 auto;padding:22px 18px 40px}
+
+  /* ---------- 게임기 헤더 ---------- */
+  .console{background:var(--shell);border-radius:22px 22px 46px 22px;padding:16px 16px 18px;
+    box-shadow:inset 0 -6px 0 var(--shell-dark), 0 10px 24px rgba(33,26,58,.12);position:relative}
+  .console .brandline{display:flex;justify-content:space-between;align-items:center;font-family:var(--pixel);font-size:11px;color:#8a6a00;margin:0 4px 10px}
+  .console .brandline i{display:inline-block;width:8px;height:8px;border-radius:50%;background:#ff3b5c;margin-right:6px;box-shadow:0 0 6px #ff3b5c;animation:pulse 1.6s infinite}
+  @keyframes pulse{50%{opacity:.35}}
+  .screen{background:var(--screen);border-radius:10px;padding:20px 18px 18px;position:relative;overflow:hidden;
+    box-shadow:inset 0 0 0 4px #2d2650, inset 0 0 30px rgba(155,255,107,.08)}
+  .screen::after{content:"";position:absolute;inset:0;pointer-events:none;
+    background:repeating-linear-gradient(0deg,rgba(255,255,255,.035) 0 2px,transparent 2px 4px)}
+  .hello{font-family:var(--pixel);color:var(--lcd);font-size:12px;opacity:.85}
+  .name{font-family:var(--pixel);font-weight:700;color:#fff;font-size:clamp(30px,9vw,46px);line-height:1.15;margin-top:6px;letter-spacing:-.5px;
+    text-shadow:3px 3px 0 #c98f00}
+  .bio{color:#cfc8ea;font-size:14px;line-height:1.6;margin-top:8px;word-break:keep-all}
+  .bio b{color:var(--yellow);font-weight:700}
+  .press{font-family:var(--pixel);color:var(--yellow);font-size:12px;margin-top:14px}
+  .press span{animation:blink 1s steps(2) infinite}
+  @keyframes blink{50%{opacity:0}}
+  .stats{position:absolute;right:16px;top:18px;font-family:var(--pixel);font-size:11px;color:var(--lcd);text-align:right;line-height:1.6;opacity:.85}
+  .controls{display:flex;justify-content:space-between;align-items:center;margin-top:16px;padding:0 6px}
+  .dpad{width:58px;height:58px;position:relative}
+  .dpad::before,.dpad::after{content:"";position:absolute;background:#2a2346;border-radius:4px}
+  .dpad::before{left:20px;top:0;width:18px;height:58px}
+  .dpad::after{top:20px;left:0;width:58px;height:18px}
+  .social{display:flex;gap:10px;align-items:center}
+  .sns{width:42px;height:42px;border-radius:50%;background:#2a2346;color:#fff;display:flex;align-items:center;justify-content:center;
+    box-shadow:inset 0 -4px 0 #120e24;transition:transform .12s}
+  .sns svg{width:19px;height:19px;fill:currentColor}
+  .sns:hover{transform:translateY(-2px)}
+  .sns:active{transform:translateY(2px);box-shadow:none}
+  .sns-label{font-family:var(--pixel);font-size:10.5px;color:#8a6a00;text-align:center;margin-top:10px;letter-spacing:.02em}
+
+  /* 협업 문의 */
+  .collab{margin-top:16px;background:#fff;border-radius:16px;padding:16px 16px 14px;box-shadow:0 0 0 1.5px rgba(33,26,58,.1), 0 8px 18px rgba(33,26,58,.06);
+    display:grid;grid-template-columns:auto 1fr;gap:4px 14px;align-items:center}
+  .collab .ic{grid-row:span 2;width:46px;height:46px;border-radius:12px;background:var(--yellow);display:flex;align-items:center;justify-content:center;box-shadow:inset 0 -4px 0 var(--shell-dark)}
+  .collab .ic svg{width:22px;height:22px;fill:var(--ink)}
+  .collab .t{font-weight:800;font-size:15.5px;letter-spacing:-.2px}
+  .collab .t small{font-family:var(--pixel);font-weight:400;font-size:10.5px;color:var(--ink-soft);margin-left:6px}
+  .collab .mail{font-family:var(--pixel);font-size:13px;color:var(--ink-soft);word-break:break-all}
+  .collab .acts{grid-column:1/-1;display:flex;gap:8px;margin-top:10px}
+  .collab .acts a,.collab .acts button{flex:1;text-align:center;font-family:var(--pixel);font-size:12.5px;padding:10px 0;border-radius:10px;border:none;cursor:pointer;color:var(--ink)}
+  .collab .acts .go{background:var(--yellow);box-shadow:inset 0 -3px 0 var(--shell-dark)}
+  .collab .acts .cp{background:#f1ecf8;box-shadow:inset 0 -3px 0 rgba(33,26,58,.12)}
+  .toast{position:fixed;left:50%;bottom:24px;transform:translate(-50%,20px);opacity:0;transition:.2s;background:var(--ink);color:var(--yellow);font-family:var(--pixel);font-size:12px;padding:9px 14px;border-radius:999px;pointer-events:none;z-index:9}
+  .toast.show{opacity:1;transform:translate(-50%,0)}
+  .ab{display:flex;gap:10px}
+  .ab span{width:34px;height:34px;border-radius:50%;background:var(--pink);box-shadow:inset 0 -4px 0 #c22e70;display:flex;align-items:center;justify-content:center;color:#fff;font-family:var(--pixel);font-size:12px}
+  @media (max-width:460px){.ab{display:none}.dpad{transform:scale(.8);transform-origin:left center}.controls{padding:0 2px}}
+  .ab span:last-child{background:var(--sky);box-shadow:inset 0 -4px 0 #2a8fc4;transform:translateY(-10px)}
+
+  /* ---------- 카테고리 탭 ---------- */
+  .tabs{display:flex;gap:8px;margin:26px 0 16px;overflow-x:auto;scrollbar-width:none;padding-bottom:4px}
+  .tabs::-webkit-scrollbar{display:none}
+  .tab{flex-shrink:0;font-family:var(--pixel);font-size:13px;border:none;cursor:pointer;color:var(--ink);background:#fff;
+    padding:10px 14px;border-radius:10px;box-shadow:inset 0 -3px 0 rgba(33,26,58,.12), 0 0 0 1.5px rgba(33,26,58,.1)}
+  .tab .n{display:inline-block;min-width:20px;margin-left:6px;padding:1px 6px;border-radius:999px;background:#efe9f8;font-size:11px;color:var(--ink-soft)}
+  .tab.on{background:var(--yellow);color:var(--ink);box-shadow:inset 0 -3px 0 var(--shell-dark), 0 0 0 1.5px rgba(33,26,58,.12)}
+  .tab.on .n{background:var(--ink);color:var(--yellow)}
+  .sec-title{font-family:var(--pixel);font-size:12px;color:var(--ink-soft);margin:0 2px 12px;display:flex;justify-content:space-between}
+
+  /* ---------- 카트리지 ---------- */
+  .shelf{display:grid;grid-template-columns:1fr;gap:22px}
+  @media (min-width:640px){.shelf{grid-template-columns:1fr 1fr}}
+  .cart{--c:var(--pink);--c2:#c22e70;position:relative;display:block;background:var(--c);border-radius:16px 16px 10px 10px;padding:22px 14px 14px;
+    box-shadow:inset 0 -6px 0 var(--c2), inset 0 3px 0 rgba(255,255,255,.35), 0 10px 22px rgba(33,26,58,.14);
+    transition:transform .18s ease, box-shadow .18s ease}
+  .cart:hover{transform:translateY(-6px) rotate(-.4deg)}
+  .cart:active{transform:translateY(-2px)}
+  .cart::before{content:"";position:absolute;left:22px;right:22px;top:8px;height:6px;border-radius:3px;
+    background:repeating-linear-gradient(90deg,rgba(0,0,0,.18) 0 6px,transparent 6px 11px)}
+  .label{background:#fffdf8;border-radius:8px;overflow:hidden;box-shadow:0 0 0 3px rgba(0,0,0,.08)}
+  .thumb{display:block;width:100%;aspect-ratio:1200/630;object-fit:cover;background:#eee8f5}
+  .info{padding:12px 13px 13px}
+  .chips{display:flex;gap:6px;align-items:center;flex-wrap:wrap}
+  .chip{font-family:var(--pixel);font-size:10.5px;padding:3px 8px;border-radius:5px;background:#f1ecf8;color:var(--ink-soft)}
+  .chip.cat{background:var(--c);color:#fff}
+  .chip.new{background:var(--yellow);color:var(--ink);animation:blink 1.2s steps(2) infinite}
+  .title{font-size:18px;font-weight:800;line-height:1.35;margin-top:8px;word-break:keep-all;letter-spacing:-.3px}
+  .sub{font-size:13px;font-weight:600;color:var(--ink-soft);margin-top:2px}
+  .desc{font-size:13.5px;line-height:1.6;color:#4a4366;margin-top:8px;word-break:keep-all}
+  .bottom{display:flex;justify-content:space-between;align-items:center;margin-top:12px;padding:0 4px}
+  .grip{width:58px;height:14px;background:repeating-linear-gradient(90deg,rgba(0,0,0,.2) 0 3px,transparent 3px 7px);border-radius:2px}
+  .play{font-family:var(--pixel);font-size:13px;color:#fff;background:rgba(0,0,0,.22);padding:8px 12px;border-radius:8px}
+  .cart:hover .play{background:rgba(0,0,0,.35)}
+
+  .soon{border:3px dashed rgba(33,26,58,.22);border-radius:16px;min-height:180px;display:flex;flex-direction:column;align-items:center;justify-content:center;
+    text-align:center;color:var(--ink-soft);font-family:var(--pixel);font-size:13px;line-height:1.8;padding:24px;background:rgba(255,255,255,.35)}
+  .soon b{font-size:15px;color:var(--ink)}
+  .empty{display:none}
+
+  footer{margin-top:36px;text-align:center;word-break:keep-all;font-family:var(--pixel);font-size:11px;color:var(--ink-soft);line-height:1.9}
+  footer a{color:var(--ink);text-decoration:underline;text-underline-offset:3px}
+</style>
 </head>
 <body>
-  <main class="box">
-    <span class="tag">♥ K-POP 덕질 시뮬레이션 ♥</span>
-    <h1><span>최애</span> 덕질<br><b>생존기</b></h1>
-    <p>[ 7년간 최애를 지켜라! ]<br>수많은 응원봉 중 하나였던 나,<br>7년 뒤 너에게 나는 어떤 이름으로 남을까?</p>
-    <a class="play" href="https://lumimori38.github.io/deokjil-survival/">▶ 게임 플레이하기</a>
-    <p class="by">made by X <a href="https://x.com/lumimori38" target="_blank" rel="noopener noreferrer">@lumimori38</a></p>
-  </main>
+<div class="wrap">
+
+  <header class="console">
+    <div class="brandline"><span><i></i>POWER</span><span>LUMI·BOY COLOR</span></div>
+    <div class="screen">
+      <div class="stats" id="stats">GAME 0<br>TEST 0</div>
+      <div class="hello">&gt; HELLO, PLAYER</div>
+      <h1 class="name">lumimori38</h1>
+      <p class="bio">쓸데없이 진심인 <b>B급 테스트</b>와 <b>웹게임</b>을 만듭니다.<br>카트리지를 골라 꽂아 보세요.</p>
+      <div class="press">▶ PRESS START<span>_</span></div>
+    </div>
+    <div class="controls">
+      <div class="dpad" aria-hidden="true"></div>
+      <div>
+        <nav class="social" aria-label="SNS">
+          <a class="sns" href="https://x.com/lumimori38" target="_blank" rel="noopener noreferrer" aria-label="X(트위터) @lumimori38"><svg viewBox="0 0 24 24"><path d="M17.8 2.5h3.3l-7.2 8.2 8.5 10.8h-6.6l-5.2-6.6-5.9 6.6H1.4l7.7-8.8L1 2.5h6.8l4.7 6.1 5.3-6.1zm-1.2 17h1.8L7.5 4.4H5.5l11.1 15.1z"/></svg></a>
+          <a class="sns" href="https://www.instagram.com/lumimori38/" target="_blank" rel="noopener noreferrer" aria-label="인스타그램 @lumimori38"><svg viewBox="0 0 24 24"><path d="M12 7.2A4.8 4.8 0 1 0 12 16.8 4.8 4.8 0 0 0 12 7.2zm0 7.9a3.1 3.1 0 1 1 0-6.2 3.1 3.1 0 0 1 0 6.2zM17.1 5.7a1.1 1.1 0 1 0 0 2.2 1.1 1.1 0 0 0 0-2.2zM12 2.2c-2.7 0-3 0-4 .1-4.3.2-5.6 2.4-5.7 5.7-.1 1-.1 1.3-.1 4s0 3 .1 4c.2 4.3 2.4 5.6 5.7 5.7 1 .1 1.3.1 4 .1s3 0 4-.1c4.3-.2 5.6-2.4 5.7-5.7.1-1 .1-1.3.1-4s0-3-.1-4c-.2-4.3-2.4-5.6-5.7-5.7-1-.1-1.3-.1-4-.1zm0 1.8c2.6 0 2.9 0 4 .1 2.7.1 3.9 1.4 4 4 .1 1 .1 1.4.1 4s0 2.9-.1 4c-.1 2.6-1.3 3.9-4 4-1 .1-1.4.1-4 .1s-2.9 0-4-.1c-2.7-.1-3.9-1.4-4-4-.1-1-.1-1.4-.1-4s0-2.9.1-4c.1-2.6 1.3-3.9 4-4 1-.1 1.4-.1 4-.1z"/></svg></a>
+          <a class="sns" href="https://www.youtube.com/@lumimori38" target="_blank" rel="noopener noreferrer" aria-label="유튜브 @lumimori38"><svg viewBox="0 0 24 24"><path d="M23 7.2a3 3 0 0 0-2.1-2.1C19 4.6 12 4.6 12 4.6s-7 0-8.9.5A3 3 0 0 0 1 7.2C.5 9.1.5 12 .5 12s0 2.9.5 4.8a3 3 0 0 0 2.1 2.1c1.9.5 8.9.5 8.9.5s7 0 8.9-.5a3 3 0 0 0 2.1-2.1c.5-1.9.5-4.8.5-4.8s0-2.9-.5-4.8zM9.7 15.3V8.7l5.8 3.3-5.8 3.3z"/></svg></a>
+        </nav>
+        <div class="sns-label">@lumimori38</div>
+      </div>
+      <div class="ab" aria-hidden="true"><span>B</span><span>A</span></div>
+    </div>
+  </header>
+
+  <section class="collab" aria-label="협업 문의">
+    <div class="ic"><svg viewBox="0 0 24 24"><path d="M3 5h18a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1zm9 7.2L4.3 7H4v.6l8 5.4 8-5.4V7h-.3L12 12.2z"/></svg></div>
+    <div class="t">협업·제작 문의<small>COLLAB</small></div>
+    <div class="mail">lumimori38@gmail.com</div>
+    <div class="acts"><a class="go" href="mailto:lumimori38@gmail.com?subject=%5B%ED%98%91%EC%97%85%20%EB%AC%B8%EC%9D%98%5D%20">✉ 메일 보내기</a><button class="cp" id="copyMail">주소 복사</button></div>
+  </section>
+
+  <nav class="tabs" id="tabs" aria-label="카테고리"></nav>
+  <div class="sec-title"><span id="secName">ALL CARTRIDGES</span><span>NEW → OLD</span></div>
+  <main class="shelf" id="shelf"></main>
+
+  <footer>
+    계속 업데이트 중<br>새 카트리지는 <a href="https://x.com/lumimori38" target="_blank" rel="noopener noreferrer">X</a> · <a href="https://www.instagram.com/lumimori38/" target="_blank" rel="noopener noreferrer">Instagram</a>에서 먼저 공개<br>
+    © lumimori38
+  </footer>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+/* =====================================================
+   콘텐츠 추가는 여기만 수정하면 됩니다.
+   - 맨 위에 한 줄(객체) 추가 → 자동으로 최신순 정렬, 탭 개수 반영
+   - cat: CATS에 있는 키 (새 카테고리는 CATS에 한 줄 추가)
+   - date: YYYY-MM-DD (14일 이내면 NEW 표시)
+   ===================================================== */
+const CATS = {
+  game: { name:'게임',   en:'GAMES', color:'#ff4f9a', dark:'#c22e70', cta:'▶ PLAY' },
+  test: { name:'테스트', en:'TESTS', color:'#2bd47d', dark:'#169b56', cta:'✎ START' },
+};
+
+const ITEMS = [
+  {
+    cat:'test',
+    title:'AI 안경 끼고 시험 보면 생기는 일',
+    sub:'커닝 지능 테스트',
+    desc:'AI가 직접 채점하는 B급 시험. 로딩 걸리고, 틀린 답 우기고, 갑자기 말하는 AI 안경과 함께 10문항.',
+    url:'https://lumimori38.github.io/ai-glasses-exam/',
+    img:'https://lumimori38.github.io/ai-glasses-exam/og-image.png',
+    date:'2026-11-19',
+    tags:['10문항','결과 16종'],
+  },
+  {
+    cat:'game',
+    title:'최애 덕질 생존기',
+    sub:'7년간 최애를 지켜라!',
+    desc:'수많은 응원봉 중 하나였던 나, 7년 뒤 너에게 나는 어떤 이름으로 남을까? 내 최애 이름으로 플레이하는 8비트 K-POP 덕질 시뮬레이션.',
+    url:'https://lumimori38.github.io/deokjil-survival/',
+    img:'https://lumimori38.github.io/deokjil-survival/og-image.png',
+    date:'2026-11-15',
+    tags:['엔딩 8종','도트 게임'],
+  },
+];
+
+/* ---------- 렌더링 ---------- */
+const $=id=>document.getElementById(id);
+const items=[...ITEMS].sort((a,b)=>b.date.localeCompare(a.date));
+const isNew=d=>(Date.now()-new Date(d+'T00:00:00+09:00'))/864e5<=14;
+const count=c=>items.filter(i=>i.cat===c).length;
+
+$('stats').innerHTML=Object.entries(CATS).map(([k,v])=>`${v.en.slice(0,-1)} ${count(k)}`).join('<br>');
+
+const tabs=[['all','전체',items.length],...Object.entries(CATS).map(([k,v])=>[k,v.name,count(k)])];
+$('tabs').innerHTML=tabs.map(([k,n,c])=>`<button class="tab" data-k="${k}">${n}<span class="n">${c}</span></button>`).join('');
+
+function card(i){
+  const c=CATS[i.cat]||{name:i.cat,color:'#7b5cff',dark:'#5a3fd0',cta:'▶ GO'};
+  return `<a class="cart" href="${i.url}" style="--c:${c.color};--c2:${c.dark}">
+    <div class="label">
+      <img class="thumb" src="${i.img}" alt="${i.title}" loading="lazy">
+      <div class="info">
+        <div class="chips"><span class="chip cat">${c.name}</span>${isNew(i.date)?'<span class="chip new">NEW</span>':''}${(i.tags||[]).map(t=>`<span class="chip">${t}</span>`).join('')}</div>
+        <div class="title">${i.title}</div>
+        ${i.sub?`<div class="sub">${i.sub}</div>`:''}
+        <p class="desc">${i.desc}</p>
+      </div>
+    </div>
+    <div class="bottom"><span class="grip"></span><span class="play">${c.cta}</span></div>
+  </a>`;
+}
+
+function render(k){
+  if(!(k in CATS)) k='all';
+  document.querySelectorAll('.tab').forEach(t=>t.classList.toggle('on',t.dataset.k===k));
+  $('secName').textContent=k==='all'?'ALL CARTRIDGES':CATS[k].en;
+  const list=k==='all'?items:items.filter(i=>i.cat===k);
+  $('shelf').innerHTML=list.map(card).join('')+
+    `<div class="soon"><b>NEXT CARTRIDGE</b>제작 중…<br>다음 B급 콘텐츠를 기다려 주세요</div>`;
+}
+$('tabs').addEventListener('click',e=>{
+  const t=e.target.closest('.tab'); if(!t) return;
+  const k=t.dataset.k; history.replaceState(null,'',k==='all'?location.pathname:'#'+k); render(k);
+});
+window.addEventListener('hashchange',()=>render(location.hash.slice(1)));
+render(location.hash.slice(1));
+
+$('copyMail').onclick=async()=>{
+  const m='lumimori38@gmail.com'; let ok=false;
+  try{await navigator.clipboard.writeText(m); ok=true;}catch(e){}
+  const t=$('toast'); t.textContent=ok?'메일 주소 복사 완료!':m; t.classList.add('show');
+  clearTimeout(t._t); t._t=setTimeout(()=>t.classList.remove('show'),1800);
+};
+</script>
 </body>
 </html>
