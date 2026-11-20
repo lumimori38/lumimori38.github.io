@@ -632,197 +632,19 @@
   function sortLogs(list) {
     return [ ...list ].sort((a, b) => (b.date || "").localeCompare(a.date || "") || (b.id || "").localeCompare(a.id || ""));
   }
-  const PENDING_KEY = "devlog_pending";
   async function loadLogs() {
     let data = null;
     try {
-      const r = await fetch("devlog.json?t=" + Date.now(), {
+      const r = await fetch("/devlog.json?t=" + Date.now(), {
         cache: "no-store"
       });
       if (r.ok) data = await r.json();
     } catch (e) {}
     if (!data) data = {
-      updatedAt: "",
       entries: []
     };
-    const p = store.get(PENDING_KEY, null);
-    if (p && p.data && p.data.updatedAt > (data.updatedAt || "") && Date.now() - p.savedAt < 10 * 60 * 1e3) data = p.data;
     data.entries = sortLogs(data.entries || []);
     return data;
-  }
-  const TOKEN_KEY = "arcade_admin_token";
-  function getToken() {
-    try {
-      return sessionStorage.getItem(TOKEN_KEY) || localStorage.getItem(TOKEN_KEY) || "";
-    } catch (e) {
-      return "";
-    }
-  }
-  function setToken(t, remember) {
-    try {
-      sessionStorage.setItem(TOKEN_KEY, t);
-      if (remember) localStorage.setItem(TOKEN_KEY, t);
-    } catch (e) {}
-  }
-  function clearToken() {
-    try {
-      sessionStorage.removeItem(TOKEN_KEY);
-      localStorage.removeItem(TOKEN_KEY);
-    } catch (e) {}
-  }
-  async function gh(path, opts = {}) {
-    const r = await fetch("https://api.github.com" + path, Object.assign({}, opts, {
-      headers: Object.assign({
-        Accept: "application/vnd.github+json",
-        Authorization: "Bearer " + getToken(),
-        "X-GitHub-Api-Version": "2022-11-28"
-      }, opts.headers || {})
-    }));
-    if (!r.ok) {
-      const t = await r.text().catch(() => "");
-      const err = new Error("GitHub " + r.status);
-      err.status = r.status;
-      err.body = t;
-      throw err;
-    }
-    return r.status === 204 ? null : r.json();
-  }
-  async function verifyToken(t) {
-    const prev = getToken();
-    setToken(t, false);
-    try {
-      const u = await gh("/user");
-      if (!u || String(u.login).toLowerCase() !== SITE.owner) {
-        throw new Error("owner");
-      }
-      return true;
-    } catch (e) {
-      if (prev) setToken(prev, false); else clearToken();
-      throw e;
-    }
-  }
-  const b64e = s => btoa(unescape(encodeURIComponent(s)));
-  const b64d = s => decodeURIComponent(escape(atob(s.replace(/\n/g, ""))));
-  async function readRemote() {
-    const f = await gh(`/repos/${SITE.owner}/${SITE.repo}/contents/devlog.json?ref=${SITE.branch}&t=${Date.now()}`);
-    return {
-      sha: f.sha,
-      data: JSON.parse(b64d(f.content))
-    };
-  }
-  async function writeRemote(mutate, message) {
-    const {sha: sha, data: data} = await readRemote();
-    data.entries = data.entries || [];
-    mutate(data);
-    data.updatedAt = (new Date).toISOString();
-    data.entries = sortLogs(data.entries);
-    await gh(`/repos/${SITE.owner}/${SITE.repo}/contents/devlog.json`, {
-      method: "PUT",
-      body: JSON.stringify({
-        message: message,
-        content: b64e(JSON.stringify(data, null, 2) + "\n"),
-        sha: sha,
-        branch: SITE.branch
-      })
-    });
-    store.set(PENDING_KEY, {
-      savedAt: Date.now(),
-      data: data
-    });
-    return data;
-  }
-  const u8 = b => new Uint8Array(b);
-  const toB64 = b => btoa(String.fromCharCode(...u8(b)));
-  const fromB64 = s => Uint8Array.from(atob(s), c => c.charCodeAt(0));
-  async function deriveKey(pw, salt, iter) {
-    const base = await crypto.subtle.importKey("raw", (new TextEncoder).encode(pw), "PBKDF2", false, [ "deriveKey" ]);
-    return crypto.subtle.deriveKey({
-      name: "PBKDF2",
-      salt: salt,
-      iterations: iter,
-      hash: "SHA-256"
-    }, base, {
-      name: "AES-GCM",
-      length: 256
-    }, false, [ "encrypt", "decrypt" ]);
-  }
-  async function sealToken(token, pw) {
-    const salt = crypto.getRandomValues(new Uint8Array(16)), iv = crypto.getRandomValues(new Uint8Array(12)), iter = 6e5;
-    const key = await deriveKey(pw, salt, iter);
-    const ct = await crypto.subtle.encrypt({
-      name: "AES-GCM",
-      iv: iv
-    }, key, (new TextEncoder).encode(token));
-    return {
-      v: 1,
-      alg: "PBKDF2-SHA256/AES-GCM",
-      iter: iter,
-      salt: toB64(salt),
-      iv: toB64(iv),
-      ct: toB64(ct)
-    };
-  }
-  async function openVault(v, pw) {
-    const key = await deriveKey(pw, fromB64(v.salt), v.iter);
-    const pt = await crypto.subtle.decrypt({
-      name: "AES-GCM",
-      iv: fromB64(v.iv)
-    }, key, fromB64(v.ct));
-    return (new TextDecoder).decode(pt);
-  }
-  async function loadVault() {
-    const p = store.get("arcade_vault_pending", null);
-    try {
-      const r = await fetch("/admin.enc.json?t=" + Date.now(), {
-        cache: "no-store"
-      });
-      if (r.ok) return await r.json();
-    } catch (e) {}
-    return p;
-  }
-  async function saveVault(v) {
-    let sha;
-    try {
-      const f = await gh(`/repos/${SITE.owner}/${SITE.repo}/contents/admin.enc.json?ref=${SITE.branch}&t=${Date.now()}`);
-      sha = f.sha;
-    } catch (e) {
-      if (e.status !== 404) throw e;
-    }
-    await gh(`/repos/${SITE.owner}/${SITE.repo}/contents/admin.enc.json`, {
-      method: "PUT",
-      body: JSON.stringify(Object.assign({
-        message: "admin: update password vault",
-        content: b64e(JSON.stringify(v, null, 2) + "\n"),
-        branch: SITE.branch
-      }, sha ? {
-        sha: sha
-      } : {}))
-    });
-    store.set("arcade_vault_pending", v);
-  }
-  async function loginWithPassword(pw, remember) {
-    const v = await loadVault();
-    if (!v) {
-      const e = new Error("novault");
-      throw e;
-    }
-    let t;
-    try {
-      t = await openVault(v, pw);
-    } catch (e) {
-      const er = new Error("badpw");
-      throw er;
-    }
-    await verifyToken(t);
-    setToken(t, remember);
-    return true;
-  }
-  async function setupPassword(token, pw, remember) {
-    await verifyToken(token);
-    setToken(token, remember);
-    const v = await sealToken(token, pw);
-    await saveVault(v);
-    return true;
   }
   function flash(el, text, ms) {
     if (!el) return;
@@ -875,17 +697,8 @@
     esc: esc,
     safeUrl: safeUrl,
     fmtDate: fmtDate,
-    loadLogs: loadLogs,
-    admin: {
-      getToken: getToken,
-      setToken: setToken,
-      clearToken: clearToken,
-      verifyToken: verifyToken,
-      writeRemote: writeRemote,
-      loadVault: loadVault,
-      loginWithPassword: loginWithPassword,
-      setupPassword: setupPassword
-    }
+    sortLogs: sortLogs,
+    loadLogs: loadLogs
   };
   if ("serviceWorker" in navigator && location.protocol === "https:") {
     window.addEventListener("load", () => navigator.serviceWorker.register("/sw.js").catch(() => {}));

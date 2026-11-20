@@ -104,18 +104,11 @@
     <div class="legend" id="logLegend"></div>
   </section>
 
-  <div class="adminbar" id="adminbar">
-    <span class="grow">🔑 관리자 모드</span>
-    <button class="abtn y" id="btnWrite" type="button">＋ 새 로그</button>
-    <button class="abtn g" id="btnLogout" type="button">나가기</button>
-  </div>
-
   <nav class="tabs" id="logTabs" aria-label="태그"></nav>
   <div class="timeline" id="logList"><div class="empty2">불러오는 중…</div></div>
 
   <footer>
-    © 루미 오락실 · lumimori38<br>
-    <button type="button" id="btnAdmin">관리자</button>
+    © 루미 오락실 · lumimori38
   </footer>
 </div>
 </div>
@@ -218,6 +211,22 @@ $("sortBtn").addEventListener("click", () => {
   });
 });
 
+function getAllLogs() {
+  return A.loadLogs().then(d => {
+    const auto = ITEMS.map(it => ({
+      id: "release-" + pad(it.no),
+      tag: "UPDATE",
+      date: it.date,
+      title: `NO.${pad(it.no)} ${it.title} 출시`,
+      body: it.desc,
+      link: it.url
+    }));
+    const ids = new Set(d.entries.map(e => e.id));
+    d.entries = A.sortLogs(d.entries.concat(auto.filter(e => !ids.has(e.id))));
+    return d;
+  });
+}
+
 const sndEl = $("snd"), sndHome = sndEl.parentNode;
 
 let view = "home", homeY = 0, fromHome = false;
@@ -308,7 +317,7 @@ $("copyMail").addEventListener("click", async () => {
   if (ok) A.flash(document.querySelector(".collab .mail"), "✔ 메일 주소 복사 완료!");
 });
 
-A.loadLogs().then(d => {
+getAllLogs().then(d => {
   const top = d.entries.slice(0, 2);
   $("logs").innerHTML = top.length ? top.map(e => {
     const t = A.TAGS[e.tag] || A.TAGS.UPDATE;
@@ -320,7 +329,7 @@ A.loadLogs().then(d => {
 (function() {
   let data = {
     entries: []
-  }, filter = "ALL", admin = !!A.admin.getToken();
+  }, filter = "ALL";
   $("logLegend").innerHTML = Object.entries(A.TAGS).map(([k, t]) => `<span><span class="ltag" style="--t:${t.color}">${A.pixIcon(t.icon, "#fff")}${k}</span>${t.ko}</span>`).join("");
   function renderTabs() {
     const c = k => k === "ALL" ? data.entries.length : data.entries.filter(e => e.tag === k).length;
@@ -328,7 +337,6 @@ A.loadLogs().then(d => {
   }
   function render() {
     renderTabs();
-    $("adminbar").classList.toggle("on", admin);
     const list = data.entries.filter(e => filter === "ALL" || e.tag === filter);
     if (!list.length) {
       $("logList").innerHTML = '<div class="empty2">아직 기록이 없어요</div>';
@@ -342,7 +350,7 @@ A.loadLogs().then(d => {
         lastM = m;
       }
       const link = e.link ? A.safeUrl(e.link) : "";
-      html += `<article class="entry" id="${A.esc(e.id)}" style="--t:${t.color}">\n      <div class="ehead"><span class="ltag" style="--t:${t.color}">${A.pixIcon(t.icon, "#fff")}${A.esc(e.tag)}</span><span class="ldate">${A.fmtDate(e.date)}</span>\n        ${admin ? `<button class="edel" type="button" data-id="${A.esc(e.id)}">삭제</button>` : ""}</div>\n      <h2 class="etitle">${A.esc(e.title)}</h2>\n      ${e.body ? `<p class="ebody">${A.esc(e.body)}</p>` : ""}\n      ${link ? `<a class="elink ui-link" href="${A.esc(link)}" target="_blank" rel="noopener noreferrer">관련 링크 ▶</a>` : ""}\n    </article>`;
+      html += `<article class="entry" id="${A.esc(e.id)}" style="--t:${t.color}">\n      <div class="ehead"><span class="ltag" style="--t:${t.color}">${A.pixIcon(t.icon, "#fff")}${A.esc(e.tag)}</span><span class="ldate">${A.fmtDate(e.date)}</span>\n</div>\n      <h2 class="etitle">${A.esc(e.title)}</h2>\n      ${e.body ? `<p class="ebody">${A.esc(e.body)}</p>` : ""}\n      ${link ? `<a class="elink ui-link" href="${A.esc(link)}" target="_blank" rel="noopener noreferrer">관련 링크 ▶</a>` : ""}\n    </article>`;
     });
     $("logList").innerHTML = html;
     if (focusId) {
@@ -372,147 +380,12 @@ A.loadLogs().then(d => {
         return;
       }
       loaded = true;
-      A.loadLogs().then(d => {
+      getAllLogs().then(d => {
         data = d;
         render();
       });
     }
   };
-  async function loginModal() {
-    const v = await A.admin.loadVault();
-    if (!v) {
-      setupModal(true);
-      return;
-    }
-    const m = A.showModal(`\n    <div class="mh">🔑 관리자 로그인</div>\n    <div class="form">\n      <label for="pw">관리자 비밀번호</label>\n      <input id="pw" type="password" autocomplete="current-password" placeholder="비밀번호">\n      <label class="chk"><input type="checkbox" id="remember"> 이 기기에서 로그인 유지 (공용 기기에선 끄세요)</label>\n      <div class="err" id="err"></div>\n      <div class="mbtns"><button class="abtn g" type="button" data-close>취소</button><button class="abtn y" type="button" id="doLogin">로그인</button></div>\n      <p class="hint" style="margin-top:12px">비밀번호를 잊었거나 바꾸고 싶다면 <a href="#" id="toSetup" style="text-decoration:underline">토큰으로 재설정</a></p>\n    </div>`);
-    const go = async () => {
-      const pw = m.querySelector("#pw").value, err = m.querySelector("#err");
-      if (!pw) {
-        err.textContent = "비밀번호를 입력해 주세요";
-        return;
-      }
-      err.textContent = "확인 중… (몇 초 걸려요)";
-      try {
-        await A.admin.loginWithPassword(pw, m.querySelector("#remember").checked);
-        admin = true;
-        m.classList.remove("show");
-        A.play("ok");
-        A.toast("관리자 모드 ON");
-        render();
-      } catch (e) {
-        err.textContent = e.message === "badpw" ? "비밀번호가 틀렸어요" : e.message === "owner" ? "lumimori38 계정의 토큰이 아니에요" : "로그인 실패: 저장된 토큰이 만료됐을 수 있어요. 토큰으로 재설정해 주세요";
-      }
-    };
-    m.querySelector("#doLogin").onclick = go;
-    m.querySelector("#pw").addEventListener("keydown", e => {
-      if (e.key === "Enter") go();
-    });
-    m.querySelector("#toSetup").onclick = e => {
-      e.preventDefault();
-      setupModal(false);
-    };
-    setTimeout(() => m.querySelector("#pw").focus(), 50);
-  }
-  function setupModal(first) {
-    const m = A.showModal(`\n    <div class="mh">🔑 ${first ? "관리자 처음 설정 (한 번만)" : "비밀번호 재설정"}</div>\n    <div class="form">\n      <p class="hint" style="margin-top:0">GitHub 토큰을 한 번 넣고 비밀번호를 정하면, 다음부터는 <b>어느 기기에서든 비밀번호만</b> 입력하면 돼요. 토큰은 비밀번호로 암호화돼 저장돼요.</p>\n      <label for="tk">GitHub 토큰</label>\n      <input id="tk" type="password" autocomplete="off" placeholder="github_pat_...">\n      <div class="row2"><div><label for="p1">새 비밀번호</label><input id="p1" type="password" autocomplete="new-password" placeholder="10자 이상"></div>\n      <div><label for="p2">비밀번호 확인</label><input id="p2" type="password" autocomplete="new-password"></div></div>\n      <label class="chk"><input type="checkbox" id="remember"> 이 기기에서 로그인 유지</label>\n      <div class="err" id="err"></div>\n      <div class="mbtns"><button class="abtn g" type="button" data-close>취소</button><button class="abtn y" type="button" id="doSetup">설정하고 로그인</button></div>\n    </div>`);
-    m.querySelector("#doSetup").onclick = async () => {
-      const t = m.querySelector("#tk").value.trim(), p1 = m.querySelector("#p1").value, p2 = m.querySelector("#p2").value, err = m.querySelector("#err");
-      if (!t) {
-        err.textContent = "GitHub 토큰을 입력해 주세요";
-        return;
-      }
-      if (p1.length < 10) {
-        err.textContent = "비밀번호는 10자 이상으로 정해 주세요";
-        return;
-      }
-      if (p1 !== p2) {
-        err.textContent = "비밀번호 확인이 달라요";
-        return;
-      }
-      err.textContent = "설정 중…";
-      try {
-        await A.admin.setupPassword(t, p1, m.querySelector("#remember").checked);
-        admin = true;
-        m.classList.remove("show");
-        A.play("ok");
-        A.toast("설정 완료! 다음부터는 비밀번호로 로그인");
-        render();
-      } catch (e) {
-        err.textContent = e.message === "owner" ? "lumimori38 계정의 토큰이 아니에요" : e.status === 403 || e.status === 404 ? "토큰 권한 오류: Contents 쓰기 권한을 확인해 주세요" : "설정 실패: 토큰이 맞는지 확인해 주세요";
-      }
-    };
-    setTimeout(() => m.querySelector("#tk").focus(), 50);
-  }
-  function today() {
-    const d = new Date(Date.now() + 9 * 36e5);
-    return d.toISOString().slice(0, 10);
-  }
-  function writeModal() {
-    const m = A.showModal(`\n    <div class="mh">＋ 새 로그 쓰기</div>\n    <div class="form">\n      <label>태그</label>\n      <div class="tagpick">${Object.entries(A.TAGS).map(([k, t], i) => `<label><input type="radio" name="tag" value="${k}" ${i === 0 ? "checked" : ""}>${A.pixIcon(t.icon, t.color)} ${k}</label>`).join("")}</div>\n      <div class="row2"><div><label for="fd">날짜</label><input id="fd" type="date" value="${today()}"></div><div><label for="fl">관련 링크 (선택)</label><input id="fl" type="url" placeholder="https://"></div></div>\n      <label for="ft">한 줄 제목 (홈에 노출)</label>\n      <input id="ft" type="text" maxlength="60" placeholder="예: 커닝 지능 테스트는 왜 만들었을까?">\n      <label for="fb">본문 (선택)</label>\n      <textarea id="fb" placeholder="자세한 이야기는 여기에. 줄바꿈 그대로 보여요."></textarea>\n      <div class="err" id="err"></div>\n      <div class="mbtns"><button class="abtn g" type="button" data-close>취소</button><button class="abtn y" type="button" id="doSave">올리기</button></div>\n    </div>`);
-    m.querySelector("#doSave").onclick = async () => {
-      const err = m.querySelector("#err"), btn = m.querySelector("#doSave");
-      const tag = m.querySelector("input[name=tag]:checked").value, date = m.querySelector("#fd").value || today();
-      const title = m.querySelector("#ft").value.trim(), body = m.querySelector("#fb").value.trim(), link = m.querySelector("#fl").value.trim();
-      if (!title) {
-        err.textContent = "한 줄 제목을 입력해 주세요";
-        return;
-      }
-      if (link && !A.safeUrl(link)) {
-        err.textContent = "링크는 https:// 로 시작해야 해요";
-        return;
-      }
-      btn.disabled = true;
-      err.textContent = "저장 중…";
-      const entry = {
-        id: date.replace(/-/g, "") + "-" + Math.random().toString(36).slice(2, 7),
-        tag: tag,
-        date: date,
-        title: title,
-        body: body,
-        link: link
-      };
-      try {
-        data = await A.admin.writeRemote(d => {
-          d.entries.push(entry);
-        }, `devlog: ${tag} ${title}`);
-        data.entries = data.entries.slice();
-        m.classList.remove("show");
-        A.play("ok");
-        A.toast("로그 등록 완료! 1~2분 뒤 모두에게 보여요");
-        render();
-      } catch (e) {
-        btn.disabled = false;
-        err.textContent = e.status === 401 || e.status === 403 ? "권한 오류: 토큰에 Contents 쓰기 권한이 있는지 확인해 주세요" : "저장 실패 (" + (e.status || e.message) + "). 잠시 뒤 다시 시도해 주세요";
-      }
-    };
-  }
-  $("btnAdmin").onclick = () => admin ? A.toast("이미 관리자 모드예요") : loginModal();
-  $("btnWrite").onclick = writeModal;
-  $("btnLogout").onclick = () => {
-    A.admin.clearToken();
-    admin = false;
-    render();
-    A.toast("관리자 모드 OFF");
-  };
-  $("logList").addEventListener("click", async e => {
-    const b = e.target.closest(".edel");
-    if (!b) return;
-    const id = b.dataset.id, entry = data.entries.find(x => x.id === id);
-    const m = A.showModal(`<div class="mh">로그 삭제</div><p style="font-size:14px;line-height:1.6;word-break:keep-all">“${A.esc(entry ? entry.title : "")}”을(를) 삭제할까요? 되돌릴 수 없어요.</p>\n    <div class="err" id="err"></div><div class="mbtns"><button class="abtn g" type="button" data-close>취소</button><button class="abtn y" type="button" id="doDel">삭제</button></div>`);
-    m.querySelector("#doDel").onclick = async () => {
-      m.querySelector("#err").textContent = "삭제 중…";
-      try {
-        data = await A.admin.writeRemote(d => {
-          d.entries = d.entries.filter(x => x.id !== id);
-        }, "devlog: delete " + id);
-        m.classList.remove("show");
-        A.toast("삭제했어요");
-        render();
-      } catch (err) {
-        m.querySelector("#err").textContent = "삭제 실패 (" + (err.status || err.message) + ")";
-      }
-    };
-  });
 })();
 
 route();
