@@ -41,13 +41,15 @@
       <div class="snd" id="snd"></div>
     </div>
     <div class="screen">
-      <div class="stats" id="stats"></div>
-      <div class="hello">&gt; HELLO, PLAYER! I'M <b>lumimori38</b><span class="cur">_</span></div>
-      <h1 class="name">루미 오락실</h1>
+      <div class="scr-top">
+        <div class="hello">&gt; HELLO, PLAYER! I'M <b>lumimori38</b></div>
+        <div class="stats" id="stats"></div>
+      </div>
+      <h1 class="name" id="heroName" aria-label="루미 오락실">루미 오락실</h1>
       <p class="bio">쓸데없이 진심인 <b>B급 테스트</b>와 <b>웹게임</b>을 만듭니다. 카트리지를 골라 꽂아 보세요.</p>
       <div class="hero-acts">
-        <button class="hbtn share" id="btnShare" type="button">⧉ 링크 공유</button>
-        <button class="hbtn install" id="btnInstall" type="button">＋ 홈 화면에 추가</button>
+        <button class="press" id="btnShare" type="button"><span class="bounce">▶</span> 링크 공유하기<span class="cur">_</span></button>
+        <button class="press alt" id="btnInstall" type="button">＋ 홈 화면에 추가</button>
       </div>
     </div>
     <div class="controls">
@@ -64,7 +66,7 @@
   <!-- ===== 협업 문의 ===== -->
   <section class="collab" aria-label="협업·제작 문의">
     <a class="main ui-link" href="mailto:lumimori38@gmail.com?subject=%5B%ED%98%91%EC%97%85%20%EB%AC%B8%EC%9D%98%5D%20">
-      <span class="t">협업·제작 문의 <span class="arr">▶</span></span>
+      <span class="t">협업·제작 문의 <span class="arr bounce">▶</span></span>
       <span class="mail">lumimori38@gmail.com</span>
     </a>
     <div class="acts">
@@ -80,13 +82,13 @@
 
   <!-- ===== DEV LOG ===== -->
   <section class="devlog" aria-label="DEV LOG">
-    <div class="sec-head"><h2>DEV LOG<small>만드는 사람의 기록</small></h2><a class="more" id="logMore" href="/log.html">전체 로그 보기 ▶</a></div>
+    <div class="sec-head"><h2>DEV LOG<small>만드는 사람의 기록</small></h2><a class="more" id="logMore" href="/log.html">전체 로그 보기 <span class="bounce">▶</span></a></div>
     <div class="logs" id="logs"><div class="empty">로그 불러오는 중…</div></div>
   </section>
 
   <footer>
     계속 업데이트 중<br>
-    새 카트리지는 <a href="https://x.com/lumimori38" target="_blank" rel="noopener noreferrer">X</a> · <a href="https://www.instagram.com/lumimori38/" target="_blank" rel="noopener noreferrer">Instagram</a>에서 먼저 공개<br>
+    새 카트리지는 <a href="https://x.com/lumimori38" target="_blank" rel="noopener noreferrer">X(Twitter)</a> · <a href="https://www.instagram.com/lumimori38/" target="_blank" rel="noopener noreferrer">Instagram</a>에서 먼저 공개<br>
     © 루미 오락실 · lumimori38
   </footer>
 </div>
@@ -108,7 +110,7 @@ const ITEMS = [
     desc:'AI가 직접 채점하는 B급 시험. 로딩 걸리고, 틀린 답 우기고, 갑자기 말하는 AI 안경과 함께 10문항.',
     url:'https://lumimori38.github.io/ai-glasses-exam/', img:'https://lumimori38.github.io/ai-glasses-exam/og-image.png',
     tags:['10문항','결과 16종'] },
-  { no:1, cat:'game', date:'2026-11-15',
+  { no:1, cat:'game', date:'2026-11-14',
     title:'최애 덕질 생존기', sub:'7년간 최애를 지켜라!',
     desc:'수많은 응원봉 중 하나였던 나, 7년 뒤 너에게 나는 어떤 이름으로 남을까? 내 최애 이름으로 플레이하는 8비트 K-POP 덕질 시뮬레이션.',
     url:'https://lumimori38.github.io/deokjil-survival/', img:'https://lumimori38.github.io/deokjil-survival/og-image.png',
@@ -138,13 +140,14 @@ function card(i){
         <p class="desc">${A.esc(i.desc)}</p>
       </div>
     </div>
-    <div class="bottom"><span class="serial"><i></i>NO.${pad(i.no)}</span><span class="play">${c.cta}</span></div>
+    <div class="bottom"><span class="serial"><i></i>NO.${pad(i.no)}</span><span class="play"><span class="bounce">${c.cta.split(' ')[0]}</span> ${c.cta.split(' ').slice(1).join(' ')}</span></div>
   </a>`;
 }
 function render(){
   document.querySelectorAll('.tab').forEach(t=>t.classList.toggle('on', t.dataset.k===cat));
   $('secName').textContent = cat==='all' ? 'ALL CARTRIDGES' : CATS[cat].en;
-  $('sortBtn').innerHTML = sort==='new' ? '최신순 <span>NEW → OLD</span>' : '오래된순 <span>OLD → NEW</span>';
+  $('sortBtn').innerHTML = (sort==='new' ? '최신순' : '오래된순') + '<span class="sw">⇅</span>';
+  $('sortBtn').setAttribute('aria-label', '정렬 바꾸기 (현재 '+(sort==='new'?'최신순':'오래된순')+')');
   const list = ITEMS.filter(i=>cat==='all'||i.cat===cat)
     .sort((a,b)=> sort==='new' ? (b.date.localeCompare(a.date)||b.no-a.no) : (a.date.localeCompare(b.date)||a.no-b.no));
   $('shelf').innerHTML = list.map(card).join('') + `
@@ -162,7 +165,7 @@ $('tabs').addEventListener('click', e=>{
   history.replaceState(null,'', cat==='all' ? location.pathname : '#'+cat);
   render();
 });
-$('sortBtn').addEventListener('click', ()=>{ sort = sort==='new' ? 'old' : 'new'; render(); });
+$('sortBtn').addEventListener('click', ()=>{ sort = sort==='new' ? 'old' : 'new'; render(); const s=$('sortBtn').querySelector('.sw'); s.classList.add('spin'); document.querySelectorAll('.cart').forEach((c,k)=>{ c.style.animation='none'; void c.offsetWidth; c.style.animation=`cartin .35s ${k*0.06}s both`; }); });
 window.addEventListener('hashchange', ()=>{ const h=location.hash.slice(1); cat = h in CATS ? h : 'all'; render(); });
 cat = location.hash.slice(1) in CATS ? location.hash.slice(1) : 'all';
 
@@ -183,16 +186,27 @@ function startLoader(){
 }
 render();
 
+/* 이름 글자가 하나씩 통통 튀는 웨이브 */
+(function(){
+  const h=$('heroName'); h.innerHTML=[...h.textContent].map((ch,k)=>ch===' '?'<span class="sp"> </span>':`<span class="wv" aria-hidden="true" style="--d:${k*0.07}s">${ch}</span>`).join('');
+  const wave=()=>{ h.classList.remove('waving'); void h.offsetWidth; h.classList.add('waving'); };
+  setTimeout(wave, 500); setInterval(wave, 7000);
+  h.addEventListener('click', ()=>{ wave(); A.play('click'); });
+})();
+
+/* 장식 버튼도 눌러보면 소리 */
+document.querySelectorAll('.dpad, .ab span').forEach(el=>el.addEventListener('click', ()=>A.play('click')));
+
 /* 히어로 버튼 */
 $('btnShare').addEventListener('click', async ()=>{
   const ok = await A.copyText(A.SITE.url);
-  A.toast(ok ? '링크 복사 완료! 친구에게 오락실을 소개해 주세요' : A.SITE.url);
+  ok ? A.flash($('btnShare'), '✔ 링크 복사 완료!') : A.toast(A.SITE.url);
 });
 if(A.isStandalone()) $('btnInstall').style.display='none';
 $('btnInstall').addEventListener('click', A.installApp);
 $('copyMail').addEventListener('click', async ()=>{
   const ok = await A.copyText('lumimori38@gmail.com');
-  A.toast(ok ? '메일 주소 복사 완료!' : 'lumimori38@gmail.com');
+  if(ok) A.flash(document.querySelector('.collab .mail'), '✔ 메일 주소 복사 완료!');
 });
 
 /* DEV LOG 미리보기 (최신 2개) */

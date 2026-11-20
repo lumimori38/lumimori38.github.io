@@ -134,26 +134,53 @@ $('tabs').addEventListener('click',e=>{ const t=e.target.closest('.tab'); if(!t)
 A.loadLogs().then(d=>{ data=d; render(); });
 
 /* ---------- 관리자 ---------- */
-function loginModal(){
+async function loginModal(){
+  const v=await A.admin.loadVault();
+  if(!v){ setupModal(true); return; }
   const m=A.showModal(`
     <div class="mh">🔑 관리자 로그인</div>
     <div class="form">
-      <label for="tk">관리자 키 (GitHub 토큰)</label>
-      <input id="tk" type="password" autocomplete="off" placeholder="github_pat_...">
-      <p class="hint">lumimori38.github.io 저장소에 쓰기 권한이 있는 GitHub 토큰이에요. 토큰은 이 브라우저에만 저장되고 사이트 코드에는 들어가지 않아요.</p>
+      <label for="pw">관리자 비밀번호</label>
+      <input id="pw" type="password" autocomplete="current-password" placeholder="비밀번호">
       <label class="chk"><input type="checkbox" id="remember"> 이 기기에서 로그인 유지 (공용 기기에선 끄세요)</label>
       <div class="err" id="err"></div>
       <div class="mbtns"><button class="abtn g" type="button" data-close>취소</button><button class="abtn y" type="button" id="doLogin">로그인</button></div>
+      <p class="hint" style="margin-top:12px">비밀번호를 잊었거나 바꾸고 싶다면 <a href="#" id="toSetup" style="text-decoration:underline">토큰으로 재설정</a></p>
     </div>`);
   const go=async()=>{
-    const t=m.querySelector('#tk').value.trim(), err=m.querySelector('#err');
-    if(!t){ err.textContent='키를 입력해 주세요'; return; }
-    err.textContent='확인 중…';
-    try{ await A.admin.verifyToken(t); A.admin.setToken(t, m.querySelector('#remember').checked); admin=true; m.classList.remove('show'); A.play('ok'); A.toast('관리자 모드 ON'); render(); }
-    catch(e){ err.textContent = e.message==='owner' ? 'lumimori38 계정의 토큰이 아니에요' : '로그인 실패: 토큰이 맞는지, 만료되지 않았는지 확인해 주세요'; }
+    const pw=m.querySelector('#pw').value, err=m.querySelector('#err');
+    if(!pw){ err.textContent='비밀번호를 입력해 주세요'; return; }
+    err.textContent='확인 중… (몇 초 걸려요)';
+    try{ await A.admin.loginWithPassword(pw, m.querySelector('#remember').checked); admin=true; m.classList.remove('show'); A.play('ok'); A.toast('관리자 모드 ON'); render(); }
+    catch(e){ err.textContent = e.message==='badpw' ? '비밀번호가 틀렸어요' : e.message==='owner' ? 'lumimori38 계정의 토큰이 아니에요' : '로그인 실패: 저장된 토큰이 만료됐을 수 있어요. 토큰으로 재설정해 주세요'; }
   };
   m.querySelector('#doLogin').onclick=go;
-  m.querySelector('#tk').addEventListener('keydown',e=>{ if(e.key==='Enter') go(); });
+  m.querySelector('#pw').addEventListener('keydown',e=>{ if(e.key==='Enter') go(); });
+  m.querySelector('#toSetup').onclick=e=>{ e.preventDefault(); setupModal(false); };
+  setTimeout(()=>m.querySelector('#pw').focus(),50);
+}
+function setupModal(first){
+  const m=A.showModal(`
+    <div class="mh">🔑 ${first?'관리자 처음 설정 (한 번만)':'비밀번호 재설정'}</div>
+    <div class="form">
+      <p class="hint" style="margin-top:0">GitHub 토큰을 한 번 넣고 비밀번호를 정하면, 다음부터는 <b>어느 기기에서든 비밀번호만</b> 입력하면 돼요. 토큰은 비밀번호로 암호화돼 저장돼요.</p>
+      <label for="tk">GitHub 토큰</label>
+      <input id="tk" type="password" autocomplete="off" placeholder="github_pat_...">
+      <div class="row2"><div><label for="p1">새 비밀번호</label><input id="p1" type="password" autocomplete="new-password" placeholder="10자 이상"></div>
+      <div><label for="p2">비밀번호 확인</label><input id="p2" type="password" autocomplete="new-password"></div></div>
+      <label class="chk"><input type="checkbox" id="remember"> 이 기기에서 로그인 유지</label>
+      <div class="err" id="err"></div>
+      <div class="mbtns"><button class="abtn g" type="button" data-close>취소</button><button class="abtn y" type="button" id="doSetup">설정하고 로그인</button></div>
+    </div>`);
+  m.querySelector('#doSetup').onclick=async()=>{
+    const t=m.querySelector('#tk').value.trim(), p1=m.querySelector('#p1').value, p2=m.querySelector('#p2').value, err=m.querySelector('#err');
+    if(!t){ err.textContent='GitHub 토큰을 입력해 주세요'; return; }
+    if(p1.length<10){ err.textContent='비밀번호는 10자 이상으로 정해 주세요'; return; }
+    if(p1!==p2){ err.textContent='비밀번호 확인이 달라요'; return; }
+    err.textContent='설정 중…';
+    try{ await A.admin.setupPassword(t, p1, m.querySelector('#remember').checked); admin=true; m.classList.remove('show'); A.play('ok'); A.toast('설정 완료! 다음부터는 비밀번호로 로그인'); render(); }
+    catch(e){ err.textContent = e.message==='owner' ? 'lumimori38 계정의 토큰이 아니에요' : (e.status===403||e.status===404) ? '토큰 권한 오류: Contents 쓰기 권한을 확인해 주세요' : '설정 실패: 토큰이 맞는지 확인해 주세요'; }
+  };
   setTimeout(()=>m.querySelector('#tk').focus(),50);
 }
 function today(){ const d=new Date(Date.now()+9*3600e3); return d.toISOString().slice(0,10); }

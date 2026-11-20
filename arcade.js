@@ -16,9 +16,14 @@ const store = {
 };
 
 /* ---------------- 토스트 ---------------- */
-let toastEl;
+let toastEl, lastTapY=null, lastTapAt=0;
+window.addEventListener('pointerdown', e=>{ lastTapY=e.clientY; lastTapAt=Date.now(); }, true);
 function toast(msg){
   if(!toastEl){ toastEl=document.createElement('div'); toastEl.className='toast'; toastEl.setAttribute('role','status'); document.body.appendChild(toastEl); }
+  // 방금 누른 곳 바로 위에 띄워 시선 이동을 줄임 (없으면 화면 위쪽)
+  const h=window.innerHeight;
+  const y = (lastTapY!=null && Date.now()-lastTapAt<4000) ? Math.max(16, Math.min(h-70, lastTapY-64)) : Math.round(h*0.2);
+  toastEl.style.setProperty('--toast-y', y+'px');
   toastEl.textContent=msg; toastEl.classList.add('show');
   clearTimeout(toastEl._t); toastEl._t=setTimeout(()=>toastEl.classList.remove('show'),1900);
 }
@@ -107,12 +112,13 @@ function scheduleStep(i, t){
   if(pos===2||pos===6) noise(bgmBus,{start:t, dur:0.03, vol:0.025, cutoff:5000}); // 아주 작은 하이햇
 }
 function bgmTick(){
-  if(!ctx) return;
+  if(!ctx || ctx.state!=='running') return;
+  if(nextTime < ctx.currentTime - 0.3) nextTime = ctx.currentTime + 0.05;   // 멈췄다 돌아오면 밀린 음을 몰아 치지 않게
   while(nextTime < ctx.currentTime + 0.15){ scheduleStep(step, nextTime); nextTime += STEP; step++; }
 }
 function startBGM(){
   if(!ensureCtx() || bgmPlaying || !snd.on) return;
-  if(ctx.state==='suspended') ctx.resume();
+  if(ctx.state!=='running'){ ctx.resume().then(()=>{ if(ctx.state==='running') startBGM(); }).catch(()=>{}); return; }
   bgmPlaying=true; nextTime=ctx.currentTime+0.1; step=0;
   bgmTimer=setInterval(bgmTick, 30);
   updateSoundBtn();
@@ -142,22 +148,72 @@ function play(name){
   try{ SFX[name] && SFX[name](); }catch(e){}
 }
 
-/* ---- 첫 터치 때 BGM 시작 (브라우저 자동재생 정책) ---- */
+/* ---- 화면 아무 데나 한 번 누르면 바로 사운드 시작 ----
+   브라우저는 사용자의 터치 '안에서'만 소리를 허용함.
+   iOS는 touchend/click에서만 허용 → 여러 이벤트에서 시도하고, 실제로 켜졌을 때만 감지를 해제 */
+const UNLOCK_EVENTS=['pointerdown','touchend','click','keydown'];
+let unlocked=false;
 function unlock(){
-  ensureCtx();
-  if(ctx && ctx.state==='suspended') ctx.resume();
-  if(snd.on) startBGM();
-  window.removeEventListener('pointerdown', unlock, true);
-  window.removeEventListener('keydown', unlock, true);
+  if(unlocked) return;
+  if(!ensureCtx()) return;
+  // iOS용: 터치 안에서 무음 버퍼를 한 번 재생해 오디오 잠금 해제
+  try{ const b=ctx.createBuffer(1,1,22050), s=ctx.createBufferSource(); s.buffer=b; s.connect(ctx.destination); s.start(0); }catch(e){}
+  const done=()=>{
+    if(unlocked || ctx.state!=='running') return;
+    unlocked=true;
+    UNLOCK_EVENTS.forEach(ev=>window.removeEventListener(ev, unlock, true));
+    hideSoundHint();
+    if(snd.on){
+      startBGM();
+      powerOn();
+    }
+    document.dispatchEvent(new CustomEvent('arcade:unlocked'));
+  };
+  if(ctx.state==='running') done(); else ctx.resume().then(done).catch(()=>{});
 }
-window.addEventListener('pointerdown', unlock, true);
-window.addEventListener('keydown', unlock, true);
-// 시도는 해봄 (이미 상호작용이 허용된 브라우저에서는 바로 재생)
-window.addEventListener('load', ()=>{ try{ ensureCtx(); if(ctx && ctx.state==='running' && snd.on) startBGM(); }catch(e){} });
+UNLOCK_EVENTS.forEach(ev=>window.addEventListener(ev, unlock, true));
+function powerOn(){ // 전원 켜지는 짧은 효과음 → 소리가 있다는 걸 바로 알 수 있게
+  try{ const t=ctx.currentTime; [60,64,67,72].forEach((m,i)=>tone(sfxBus,{type:'square', freq:mtof(m), start:t+i*0.06, dur:0.09, vol:0.09})); }catch(e){}
+}
+
+/* ---- "누르면 소리 나요" 안내 칩 ---- */
+let hintEl=null;
+function showSoundHint(){
+  if(unlocked || !snd.on || hintEl) return;
+  hintEl=document.createElement('div'); hintEl.className='snd-hint';
+  hintEl.innerHTML='<span class="eq"><i></i><i></i><i></i></span>화면을 누르면 8비트 BGM이 켜져요';
+  document.body.appendChild(hintEl);
+  requestAnimationFrame(()=>hintEl && hintEl.classList.add('show'));
+}
+function hideSoundHint(){ if(!hintEl) return; const h=hintEl; hintEl=null; h.classList.remove('show'); setTimeout(()=>h.remove(),300); }
+// (안내 칩은 사용하지 않음 — 첫 탭 때 전원 효과음 + ♪ TAP 깜빡임으로 알림)
+
+/* ---- 다른 앱 갔다 돌아왔을 때 소리 복구 ----
+   휴대폰은 백그라운드에서 오디오를 '중단' 상태로 만들고, 다시 켜려면 터치가 필요할 때가 많음.
+   → 돌아오면 바로 재개 시도 + 실패하면 다음 터치에서 재개, 그래도 안 되면 오디오를 새로 만듦 */
+function recreateAudio(){
+  try{ if(bgmTimer){ clearInterval(bgmTimer); bgmTimer=null; } bgmPlaying=false; if(ctx) ctx.close().catch(()=>{}); }catch(e){}
+  ctx=null; ensureCtx();
+  if(ctx){ ctx.resume().catch(()=>{}); if(snd.on) startBGM(); }
+}
+function wake(fromGesture){
+  if(!ctx || !unlocked || !snd.on) return;
+  const after=()=>{
+    if(ctx.state==='running'){ nextTime=ctx.currentTime+0.05; if(!bgmPlaying) startBGM(); updateSoundBtn(); return true; }
+    return false;
+  };
+  if(ctx.state==='running'){ after(); return; }
+  ctx.resume().then(()=>{ if(!after() && fromGesture) recreateAudio(); }).catch(()=>{ if(fromGesture) recreateAudio(); });
+}
+function wakeOnTouch(){ wake(true); }
+['pointerdown','touchend','click','keydown'].forEach(ev=>window.addEventListener(ev, wakeOnTouch, true));
 document.addEventListener('visibilitychange', ()=>{
   if(!ctx) return;
-  if(document.hidden) ctx.suspend(); else if(snd.on) ctx.resume();
+  if(document.hidden){ ctx.suspend().catch(()=>{}); }
+  else wake(false);
 });
+window.addEventListener('pageshow', ()=>wake(false));
+window.addEventListener('focus', ()=>wake(false));
 
 /* ---- 사운드 설정 패널 ---- */
 let sndBtn, panel;
@@ -194,7 +250,7 @@ function mountSound(container){
   });
   on.addEventListener('change', ()=>{
     snd.on = on.checked; save(); applyVolumes();
-    if(snd.on){ startBGM(); play('ok'); } else stopBGM();
+    if(snd.on){ unlock(); startBGM(); play('ok'); } else { stopBGM(); hideSoundHint(); }
     sync();
   });
   b.addEventListener('input', ()=>{ snd.bgm=+b.value; bv.textContent=snd.bgm; applyVolumes(); save(); });
@@ -237,25 +293,68 @@ function showModal(html){
   m.classList.add('show');
   return m;
 }
+const isInApp = () => /Instagram|FBAN|FBAV|Twitter|KAKAOTALK|Line\/|NAVER\(inapp|everytimeApp/i.test(navigator.userAgent);
+const isMobile = () => /android|iphone|ipad|ipod/i.test(navigator.userAgent) || (navigator.maxTouchPoints>1 && window.innerWidth<900);
+function guideHTML(){
+  if(isInApp()) return `<li>오른쪽 위(또는 아래) <b>⋯ 메뉴</b>를 눌러요</li><li><b>다른 브라우저로 열기</b>(Safari/Chrome)를 눌러요</li><li>열린 화면에서 <b>홈 화면에 추가</b> 버튼을 다시 눌러요</li>`;
+  if(isIOS()) return `<li>Safari 아래(또는 위)의 <b>공유 버튼</b> <span class="kbd">□↑</span>을 눌러요</li><li>목록을 내려 <b>홈 화면에 추가</b>를 눌러요</li><li>오른쪽 위 <b>추가</b>를 누르면 끝!</li>`;
+  return `<li>브라우저 오른쪽 위 <b>메뉴</b> <span class="kbd">⋮</span>를 눌러요</li><li><b>홈 화면에 추가</b> 또는 <b>앱 설치</b>를 눌러요</li><li>노란 게임기 아이콘이 생기면 끝!</li>`;
+}
 async function installApp(){
-  if(isStandalone()){ toast('이미 홈 화면에서 실행 중이에요!'); return; }
-  if(deferredPrompt){
+  if(isStandalone()){ toast('이미 앱으로 실행 중이에요!'); return; }
+  closeSheet(true);
+  if(deferredPrompt && !isInApp()){
     deferredPrompt.prompt();
     const r = await deferredPrompt.userChoice.catch(()=>null);
     deferredPrompt=null;
-    if(r && r.outcome==='accepted'){ play('ok'); toast('홈 화면에 루미 오락실이 생겼어요!'); }
+    if(r && r.outcome==='accepted'){ play('ok'); toast('홈 화면에 루미 오락실이 생겼어요!'); store.set('arcade_installed', true); }
     return;
   }
-  const ios = isIOS();
-  showModal(`
-    <div class="mh">홈 화면에 추가하기</div>
-    <ol class="guide">
-      ${ios
-        ? `<li>Safari 아래(또는 위)의 <b>공유 버튼</b> <span class="kbd">□↑</span>을 눌러요</li><li>목록에서 <b>홈 화면에 추가</b>를 눌러요</li><li>오른쪽 위 <b>추가</b>를 누르면 끝!</li>`
-        : `<li>브라우저 오른쪽 위 <b>메뉴</b> <span class="kbd">⋮</span>를 눌러요</li><li><b>홈 화면에 추가</b> 또는 <b>앱 설치</b>를 눌러요</li><li>노란 게임기 아이콘이 생기면 끝!</li>`}
-    </ol>
-    <button class="modal-ok" data-close>알겠어요</button>`);
+  showModal(`<div class="mh">홈 화면에 추가하기</div><ol class="guide">${guideHTML()}</ol><button class="modal-ok" data-close>알겠어요</button>`);
 }
+
+/* ---- 앱처럼 쓰세요 팝업 (모바일, 처음 방문 시) ---- */
+const SHEET_KEY='arcade_sheet_dismissed';
+let sheetEl=null;
+function closeSheet(remember){
+  if(remember) store.set(SHEET_KEY, Date.now());
+  if(!sheetEl) return; const s=sheetEl; sheetEl=null; s.classList.remove('show'); setTimeout(()=>s.remove(),300);
+}
+function showInstallSheet(force){
+  if(sheetEl || isStandalone() || store.get('arcade_installed', false)) return;
+  if(!force){
+    if(!isMobile()) return;
+    const d=store.get(SHEET_KEY, 0); if(d && Date.now()-d < 7*864e5) return;
+  }
+  hideSoundHint();
+  sheetEl=document.createElement('div'); sheetEl.className='sheet'; sheetEl.setAttribute('role','dialog'); sheetEl.setAttribute('aria-label','홈 화면에 추가');
+  sheetEl.innerHTML=`
+    <div class="sh-in">
+      <img src="/icon-192.png" alt="" class="sh-icon">
+      <div class="sh-txt"><b>루미 오락실, 앱처럼 쓰세요!</b><span>홈 화면에 추가하면 아이콘 한 번으로 바로 입장해요</span></div>
+      <button class="sh-x" type="button" aria-label="닫기" data-sfx="none">×</button>
+    </div>
+    <div class="sh-btns"><button class="sh-later" type="button">나중에</button><button class="sh-add" type="button">＋ 홈 화면에 추가</button></div>`;
+  document.body.appendChild(sheetEl);
+  sheetEl.querySelector('.sh-x').onclick=()=>closeSheet(true);
+  sheetEl.querySelector('.sh-later').onclick=()=>closeSheet(true);
+  sheetEl.querySelector('.sh-add').onclick=installApp;
+  requestAnimationFrame(()=>sheetEl && sheetEl.classList.add('show'));
+}
+/* 설치 창 자동 띄우기: 브라우저가 '사용자 터치 안에서만' 허용하므로,
+   첫 빈 공간 탭(링크·버튼 제외)에 맞춰 기본 설치 창을 바로 띄움. 안드로이드 Chrome 계열만 가능 */
+function autoInstall(e){
+  if(!deferredPrompt || isStandalone() || isInApp()) return;
+  if(e.target.closest('a, button, input, label, .snd, .modal')) return;
+  const d=store.get(SHEET_KEY, 0); if(d && Date.now()-d < 7*864e5) return;
+  window.removeEventListener('click', autoInstall, true);
+  store.set(SHEET_KEY, Date.now());               // 거절해도 7일간 다시 안 띄움
+  deferredPrompt.prompt();
+  deferredPrompt.userChoice.then(r=>{ if(r && r.outcome==='accepted'){ store.set('arcade_installed', true); toast('홈 화면에 추가 완료!'); } }).catch(()=>{});
+  deferredPrompt=null;
+}
+window.addEventListener('click', autoInstall, true);
+window.addEventListener('appinstalled', ()=>{ store.set('arcade_installed', true); closeSheet(false); });
 
 /* =========================================================
    DEV LOG
@@ -335,11 +434,76 @@ async function writeRemote(mutate, message){
   return data;
 }
 
+/* ---- 비밀번호 금고: 토큰을 비밀번호로 암호화해 admin.enc.json에 보관 ----
+   PBKDF2(SHA-256, 60만 회) → AES-GCM. 비밀번호 없이는 토큰을 꺼낼 수 없음 */
+const u8 = b => new Uint8Array(b);
+const toB64 = b => btoa(String.fromCharCode(...u8(b)));
+const fromB64 = s => Uint8Array.from(atob(s), c=>c.charCodeAt(0));
+async function deriveKey(pw, salt, iter){
+  const base=await crypto.subtle.importKey('raw', new TextEncoder().encode(pw), 'PBKDF2', false, ['deriveKey']);
+  return crypto.subtle.deriveKey({name:'PBKDF2', salt, iterations:iter, hash:'SHA-256'}, base, {name:'AES-GCM', length:256}, false, ['encrypt','decrypt']);
+}
+async function sealToken(token, pw){
+  const salt=crypto.getRandomValues(new Uint8Array(16)), iv=crypto.getRandomValues(new Uint8Array(12)), iter=600000;
+  const key=await deriveKey(pw, salt, iter);
+  const ct=await crypto.subtle.encrypt({name:'AES-GCM', iv}, key, new TextEncoder().encode(token));
+  return { v:1, alg:'PBKDF2-SHA256/AES-GCM', iter, salt:toB64(salt), iv:toB64(iv), ct:toB64(ct) };
+}
+async function openVault(v, pw){
+  const key=await deriveKey(pw, fromB64(v.salt), v.iter);
+  const pt=await crypto.subtle.decrypt({name:'AES-GCM', iv:fromB64(v.iv)}, key, fromB64(v.ct));
+  return new TextDecoder().decode(pt);
+}
+async function loadVault(){
+  const p=store.get('arcade_vault_pending', null);
+  try{ const r=await fetch('/admin.enc.json?t='+Date.now(), {cache:'no-store'}); if(r.ok) return await r.json(); }catch(e){}
+  return p; // 막 설정한 직후(깃허브 반영 전)엔 로컬 사본
+}
+async function saveVault(v){
+  let sha;
+  try{ const f=await gh(`/repos/${SITE.owner}/${SITE.repo}/contents/admin.enc.json?ref=${SITE.branch}&t=${Date.now()}`); sha=f.sha; }catch(e){ if(e.status!==404) throw e; }
+  await gh(`/repos/${SITE.owner}/${SITE.repo}/contents/admin.enc.json`, { method:'PUT',
+    body:JSON.stringify(Object.assign({ message:'admin: update password vault', content:b64e(JSON.stringify(v,null,2)+'\n'), branch:SITE.branch }, sha?{sha}:{})) });
+  store.set('arcade_vault_pending', v);
+}
+async function loginWithPassword(pw, remember){
+  const v=await loadVault(); if(!v) { const e=new Error('novault'); throw e; }
+  let t; try{ t=await openVault(v, pw); }catch(e){ const er=new Error('badpw'); throw er; }
+  await verifyToken(t); setToken(t, remember); return true;
+}
+async function setupPassword(token, pw, remember){
+  await verifyToken(token); setToken(token, remember);
+  const v=await sealToken(token, pw); await saveVault(v); return true;
+}
+
+/* 누른 글자를 잠깐 바꿔서 결과를 보여줌 (겹치는 알림 대신) */
+function flash(el, text, ms){
+  if(!el) return;
+  if(el._flashT){ clearTimeout(el._flashT); } else { el._orig = el.innerHTML; }
+  el.textContent = text; el.classList.add('flashing');
+  el._flashT = setTimeout(()=>{ el.innerHTML = el._orig; el.classList.remove('flashing'); el._flashT = null; }, ms||1800);
+}
+
+/* 탭한 자리에 픽셀 반짝이 */
+const SPARK=['#ffd23f','#ff4f9a','#4fc3ff','#9bff6b'];
+window.addEventListener('pointerdown', e=>{
+  if(window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  if(e.target.closest('input, textarea, select, .modal-box')) return;
+  for(let k=0;k<6;k++){
+    const s=document.createElement('i'); s.className='spark';
+    const a=(Math.PI*2*k/6)+Math.random()*.5, r=18+Math.random()*14;
+    s.style.left=(e.clientX-3)+'px'; s.style.top=(e.clientY-3)+'px';
+    s.style.background=SPARK[k%SPARK.length];
+    s.style.setProperty('--dx', Math.cos(a)*r+'px'); s.style.setProperty('--dy', Math.sin(a)*r+'px');
+    document.body.appendChild(s); setTimeout(()=>s.remove(), 520);
+  }
+}, {passive:true});
+
 /* ---------------- 공개 API ---------------- */
 window.Arcade = {
-  SITE, toast, copyText, play, mountSound, navigateWithSound, installApp, isStandalone, showModal,
+  SITE, toast, flash, copyText, play, audioState:()=>({state:ctx&&ctx.state, playing:bgmPlaying, _suspend:()=>ctx&&ctx.suspend()}), mountSound, navigateWithSound, installApp, isStandalone, showModal, showInstallSheet,
   TAGS, pixIcon, esc, safeUrl, fmtDate, loadLogs,
-  admin:{ getToken, setToken, clearToken, verifyToken, writeRemote },
+  admin:{ getToken, setToken, clearToken, verifyToken, writeRemote, loadVault, loginWithPassword, setupPassword },
 };
 
 /* 서비스워커 (홈 화면 앱용) */

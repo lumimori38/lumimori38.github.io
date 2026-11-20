@@ -40,8 +40,18 @@ button{font:inherit;color:inherit}
 .name{font-family:var(--pixel);font-weight:700;color:#fff;font-size:clamp(34px,10.5vw,52px);line-height:1.15;margin-top:8px;letter-spacing:-1px;text-shadow:3px 3px 0 #c98f00}
 .bio{color:#cfc8ea;font-size:14px;line-height:1.6;margin-top:6px;word-break:keep-all}
 .bio b{color:var(--yellow);font-weight:700}
-.stats{position:absolute;right:16px;top:16px;font-family:var(--pixel);font-size:10.5px;color:var(--lcd);text-align:right;line-height:1.6;opacity:.8}
-.hero-acts{display:flex;gap:8px;margin-top:14px;position:relative;z-index:1;flex-wrap:wrap}
+.scr-top{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;position:relative;z-index:1}
+.scr-top .hello{flex:1;min-width:0;line-height:1.5}
+.stats{flex-shrink:0;font-family:var(--pixel);font-size:10.5px;color:var(--lcd);text-align:right;line-height:1.5;opacity:.85;white-space:nowrap}
+.hero-acts{display:flex;gap:6px 18px;margin-top:10px;position:relative;z-index:1;flex-wrap:wrap;align-items:center}
+.press{font-family:var(--pixel);font-size:11.5px;color:var(--yellow);background:none;border:none;cursor:pointer;padding:6px 0;letter-spacing:.02em}
+.press .cur{animation:blink 1s steps(2) infinite}
+.press:hover{color:#fff}
+.press.alt{color:#bdb4e6}
+.press.alt:hover{color:#fff}
+.flashing{color:var(--lcd)!important;animation:none}
+.collab .mail.flashing{color:#169b56!important}
+.press:active{transform:translateY(1px)}
 .hbtn{font-family:var(--pixel);font-size:12px;border:none;cursor:pointer;padding:9px 12px;border-radius:8px;display:inline-flex;align-items:center;gap:6px}
 .hbtn.share{background:var(--yellow);color:var(--ink);box-shadow:inset 0 -3px 0 var(--shell-dark)}
 .hbtn.install{background:#2d2650;color:#e9e4ff;box-shadow:inset 0 -3px 0 #120e24}
@@ -59,7 +69,7 @@ button{font:inherit;color:inherit}
 .ab{display:flex;gap:10px}
 .ab span{width:34px;height:34px;border-radius:50%;background:var(--pink);box-shadow:inset 0 -4px 0 #c22e70;display:flex;align-items:center;justify-content:center;color:#fff;font-family:var(--pixel);font-size:12px}
 .ab span:last-child{background:var(--sky);box-shadow:inset 0 -4px 0 #2a8fc4;transform:translateY(-10px)}
-@media (max-width:460px){.stats{display:none}.ab{display:none}.dpad{transform:scale(.8);transform-origin:left center}.controls{padding:0 2px}}
+@media (max-width:460px){.ab{display:none}.dpad{transform:scale(.8);transform-origin:left center}.controls{padding:0 2px}}
 
 /* ---------- 사운드 버튼/패널 ---------- */
 .snd{position:relative}
@@ -165,8 +175,9 @@ footer a, footer a:visited, footer button{color:var(--ink-soft);text-decoration:
 footer a:hover, footer button:hover{color:var(--ink)}
 
 /* ---------- 토스트/모달 ---------- */
-.toast{position:fixed;left:50%;bottom:28px;transform:translate(-50%,20px);opacity:0;transition:.2s;background:var(--ink);color:var(--yellow);font-family:var(--pixel);font-size:12.5px;
-  padding:10px 16px;border-radius:999px;pointer-events:none;z-index:100;white-space:nowrap;box-shadow:0 8px 20px rgba(0,0,0,.2)}
+.toast{position:fixed;left:50%;top:var(--toast-y,22%);transform:translate(-50%,6px);opacity:0;transition:.2s;z-index:100;pointer-events:none;
+  font-family:var(--pixel);font-size:14px;color:var(--yellow);max-width:calc(100% - 32px);width:max-content;text-align:center;word-break:keep-all;letter-spacing:.01em;
+  text-shadow:2px 0 0 var(--ink),-2px 0 0 var(--ink),0 2px 0 var(--ink),0 -2px 0 var(--ink),2px 2px 0 var(--ink),-2px 2px 0 var(--ink),2px -2px 0 var(--ink),-2px -2px 0 var(--ink),0 4px 0 rgba(33,26,58,.35)}
 .toast.show{opacity:1;transform:translate(-50%,0)}
 .modal{position:fixed;inset:0;z-index:90;background:rgba(27,22,48,.55);display:none;align-items:center;justify-content:center;padding:20px}
 .modal.show{display:flex}
@@ -175,3 +186,94 @@ footer a:hover, footer button:hover{color:var(--ink)}
 .guide{padding-left:20px;font-size:14px;line-height:1.9;word-break:keep-all}
 .kbd{font-family:var(--pixel);background:#f1ecf8;padding:1px 6px;border-radius:4px;font-size:12px}
 .modal-ok{width:100%;margin-top:14px;border:none;cursor:pointer;background:var(--yellow);font-family:var(--pixel);font-size:13px;padding:11px;border-radius:10px;box-shadow:inset 0 -3px 0 var(--shell-dark)}
+
+/* ---------- 사운드 안내 칩 ---------- */
+.snd-hint{position:fixed;left:50%;bottom:22px;transform:translate(-50%,24px);opacity:0;transition:.3s;z-index:80;pointer-events:none;
+  display:flex;align-items:center;gap:9px;background:var(--ink);color:#fff;font-family:var(--pixel);font-size:12.5px;padding:11px 16px;border-radius:999px;
+  box-shadow:0 0 0 3px var(--yellow), 0 10px 24px rgba(0,0,0,.25);white-space:nowrap}
+.snd-hint.show{opacity:1;transform:translate(-50%,0);animation:hintbob 1.6s ease-in-out .4s infinite}
+@keyframes hintbob{50%{transform:translate(-50%,-4px)}}
+.snd-hint .eq{display:inline-flex;gap:2px;align-items:flex-end;height:12px}
+.snd-hint .eq i{width:3px;background:var(--yellow);animation:eq .8s steps(3) infinite}
+.snd-hint .eq i:nth-child(1){height:6px}.snd-hint .eq i:nth-child(2){height:12px;animation-delay:.2s}.snd-hint .eq i:nth-child(3){height:8px;animation-delay:.4s}
+@keyframes eq{50%{transform:scaleY(.4)}}
+
+/* ---------- 앱 설치 시트 ---------- */
+.sheet{position:fixed;left:12px;right:12px;bottom:12px;z-index:85;max-width:440px;margin:0 auto;background:#fff;border-radius:18px;padding:14px 14px 12px;
+  box-shadow:0 0 0 2px var(--yellow), 0 18px 40px rgba(27,22,48,.3);transform:translateY(130%);transition:transform .35s cubic-bezier(.2,.9,.3,1.2);
+  padding-bottom:calc(12px + env(safe-area-inset-bottom))}
+.sheet.show{transform:none}
+.sh-in{display:flex;gap:12px;align-items:center}
+.sh-icon{width:52px;height:52px;border-radius:13px;image-rendering:pixelated;box-shadow:0 2px 6px rgba(0,0,0,.15);flex-shrink:0}
+.sh-txt{flex:1;min-width:0}
+.sh-txt b{display:block;font-size:15.5px;font-weight:800;letter-spacing:-.3px}
+.sh-txt span{display:block;font-size:12.5px;color:var(--ink-soft);margin-top:3px;line-height:1.45;word-break:keep-all}
+.sh-x{align-self:flex-start;border:none;background:none;font-size:22px;line-height:1;color:var(--ink-soft);cursor:pointer;padding:0 2px}
+.sh-btns{display:flex;gap:8px;margin-top:12px}
+.sh-btns button{border:none;cursor:pointer;font-family:var(--pixel);font-size:13px;padding:11px 0;border-radius:10px}
+.sh-later{flex:0 0 32%;background:#f1ecf8;color:var(--ink-soft)}
+.sh-add{flex:1;background:var(--yellow);color:var(--ink);box-shadow:inset 0 -3px 0 var(--shell-dark)}
+
+/* =========================================================
+   인터랙션 (귀엽게, 과하지 않게)
+   ========================================================= */
+/* NEW 깜빡 */
+.chip.new{animation:newblink 1.1s steps(2) infinite}
+@keyframes newblink{50%{background:#fff3b0;color:#c98f00}}
+/* ▶ 화살표 통통 */
+.bounce{display:inline-block;animation:bounceX .9s ease-in-out infinite}
+@keyframes bounceX{0%,100%{transform:translateX(0)}50%{transform:translateX(3px)}}
+.cart .play .bounce{animation-duration:1.2s}
+.cart:hover .play .bounce{animation-duration:.5s}
+/* 이름 글자 웨이브 */
+.name .wv{display:inline-block}
+.name .sp{display:inline-block;width:.3em}
+.name{cursor:pointer;user-select:none}
+.name.waving .wv{animation:hop .55s cubic-bezier(.3,1.6,.5,1) var(--d) both}
+@keyframes hop{0%{transform:translateY(0)}40%{transform:translateY(-9px)}100%{transform:translateY(0)}}
+/* SNS 버튼: 번갈아 살짝 점프 + 누르면 쏙 */
+.social .sns{animation:idlehop 6s ease-in-out infinite}
+.social .sns:nth-child(2){animation-delay:.25s}
+.social .sns:nth-child(3){animation-delay:.5s}
+@keyframes idlehop{0%,86%,100%{transform:translateY(0)}90%{transform:translateY(-5px)}94%{transform:translateY(0)}97%{transform:translateY(-2px)}}
+.sns:hover{animation:none;transform:translateY(-3px) rotate(-6deg)}
+/* 십자키·AB 버튼 눌림 */
+.dpad,.ab span{cursor:pointer;transition:transform .08s}
+.dpad:active{transform:scale(.9) rotate(-4deg)}
+@media (max-width:460px){.dpad:active{transform:scale(.72) rotate(-4deg)}}
+.ab span:active{transform:translateY(3px);box-shadow:none}
+.ab span:last-child:active{transform:translateY(-7px)}
+/* 카트리지: 썸네일 반짝 + 정렬 바꿀 때 착착 */
+.label{position:relative}
+.label::after{content:"";position:absolute;top:0;left:-60%;width:40%;height:56%;background:linear-gradient(100deg,transparent,rgba(255,255,255,.55),transparent);transform:skewX(-18deg);pointer-events:none;opacity:0}
+.cart:hover .label::after{animation:shine .8s ease-out}
+@keyframes shine{0%{left:-60%;opacity:1}100%{left:130%;opacity:1}}
+@keyframes cartin{from{opacity:0;transform:translateY(14px) scale(.97)}to{opacity:1;transform:none}}
+/* 정렬 아이콘 */
+.sortbtn{gap:4px}
+.sortbtn .sw{display:inline-block;font-size:13px;color:var(--shell-dark);transition:transform .3s}
+.sortbtn:hover .sw{transform:translateY(-1px)}
+.sortbtn .sw.spin{animation:flip .35s ease-out}
+@keyframes flip{from{transform:rotate(180deg) scale(1.3)}to{transform:none}}
+/* 탭 눌림 */
+.tab{transition:transform .08s}
+.tab:active{transform:translateY(2px) scale(.97)}
+/* NEXT CARTRIDGE 점선 행진 */
+.soon{border:none;background-image:
+  repeating-linear-gradient(90deg,rgba(33,26,58,.25) 0 10px,transparent 10px 18px),repeating-linear-gradient(90deg,rgba(33,26,58,.25) 0 10px,transparent 10px 18px),
+  repeating-linear-gradient(0deg,rgba(33,26,58,.25) 0 10px,transparent 10px 18px),repeating-linear-gradient(0deg,rgba(33,26,58,.25) 0 10px,transparent 10px 18px);
+  background-size:100% 3px,100% 3px,3px 100%,3px 100%;background-position:0 0,0 100%,0 0,100% 0;background-repeat:no-repeat;background-color:rgba(255,255,255,.35);
+  animation:march 1.2s linear infinite}
+@keyframes march{to{background-position:18px 0,-18px 100%,0 -18px,100% 18px}}
+/* DEV LOG 태그 아이콘 둥실 */
+.ltag .pix{animation:bob 1.6s ease-in-out infinite}
+@keyframes bob{50%{transform:translateY(-1.5px)}}
+.logrow:hover .ltitle{color:#000}
+/* 협업 카드 살짝 */
+.collab{transition:transform .15s}
+.collab:hover{transform:translateY(-2px)}
+/* 탭한 자리에 픽셀 반짝이 */
+.spark{position:fixed;width:6px;height:6px;pointer-events:none;z-index:120;animation:spark .5s ease-out forwards}
+@keyframes spark{from{transform:translate(0,0) scale(1);opacity:1}to{transform:translate(var(--dx),var(--dy)) scale(.4);opacity:0}}
+/* 흔들림 줄이기 설정을 켠 사람에겐 움직임 끔 */
+@media (prefers-reduced-motion: reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
