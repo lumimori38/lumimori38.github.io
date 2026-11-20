@@ -327,17 +327,59 @@
     h.classList.remove("show");
     setTimeout(() => h.remove(), 300);
   }
+  let rebuilding = false;
+  function rebuildAudio() {
+    if (rebuilding) return;
+    rebuilding = true;
+    try {
+      if (bgmTimer) {
+        clearInterval(bgmTimer);
+        bgmTimer = null;
+      }
+      bgmPlaying = false;
+      const old = ctx;
+      ctx = null;
+      if (old) {
+        try {
+          old.close();
+        } catch (e) {}
+      }
+      ensureCtx();
+      try {
+        const b = ctx.createBuffer(1, 1, 22050), s = ctx.createBufferSource();
+        s.buffer = b;
+        s.connect(ctx.destination);
+        s.start(0);
+      } catch (e) {}
+      ctx.resume().catch(() => {});
+      startBGM();
+    } finally {
+      rebuilding = false;
+    }
+  }
   function wake() {
     if (!ctx || !unlocked || !snd.on) return;
     if (ctx.state !== "running") ctx.resume().catch(() => {});
     if (!bgmTimer) startBGM();
   }
-  [ "pointerdown", "touchend" ].forEach(ev => window.addEventListener(ev, wake, true));
+  function wakeOnTap(e) {
+    if (!ctx || !unlocked || !snd.on) return;
+    if (e.type === "pointerdown" && e.pointerType !== "mouse") return;
+    if (ctx.state === "running") {
+      if (!bgmTimer) startBGM();
+      return;
+    }
+    rebuildAudio();
+  }
+  [ "pointerdown", "touchend", "keydown" ].forEach(ev => window.addEventListener(ev, wakeOnTap, true));
   document.addEventListener("visibilitychange", () => {
     if (!ctx) return;
-    if (document.hidden) ctx.suspend().catch(() => {}); else wake();
+    if (document.hidden) {
+      ctx.suspend().catch(() => {});
+    } else wake();
   });
   window.addEventListener("pageshow", wake);
+  window.addEventListener("focus", wake);
   let sndBtn, panel;
   function updateSoundBtn() {
     if (!sndBtn) return;
