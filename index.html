@@ -18,7 +18,6 @@
 <meta name="twitter:creator" content="@lumimori38">
 <meta name="twitter:title" content="루미 오락실🎮 — B급 테스트·게임 모음 (lumimori38)">
 <meta name="twitter:image" content="https://lumimori38.github.io/og-hub.png">
-<!-- 홈 화면 앱 -->
 <link rel="manifest" href="/manifest.webmanifest">
 <meta name="theme-color" content="#ffd23f">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -33,7 +32,6 @@
 <body>
 <div class="wrap">
 
-  <!-- ===== 히어로: 게임기 ===== -->
   <header class="console">
     <div class="brandline">
       <span class="pw"><i></i>POWER</span>
@@ -45,7 +43,7 @@
         <div class="hello">&gt; HELLO, PLAYER! I'M <b>lumimori38</b></div>
         <div class="stats" id="stats"></div>
       </div>
-      <h1 class="name" id="heroName" aria-label="루미 오락실">루미 오락실</h1>
+      <h1 class="name">루미 오락실</h1>
       <p class="bio">쓸데없이 진심인 <b>B급 테스트</b>와 <b>웹게임</b>을 만듭니다. 카트리지를 골라 꽂아 보세요.</p>
       <div class="hero-acts">
         <button class="press" id="btnShare" type="button"><span class="bounce">▶</span> 링크 공유하기<span class="cur">_</span></button>
@@ -63,7 +61,6 @@
     </div>
   </header>
 
-  <!-- ===== 협업 문의 ===== -->
   <section class="collab" aria-label="협업·제작 문의">
     <a class="main ui-link" href="mailto:lumimori38@gmail.com?subject=%5B%ED%98%91%EC%97%85%20%EB%AC%B8%EC%9D%98%5D%20">
       <span class="t">협업·제작 문의 <span class="arr bounce">▶</span></span>
@@ -75,12 +72,10 @@
     </div>
   </section>
 
-  <!-- ===== 카트리지 선반 ===== -->
   <nav class="tabs" id="tabs" aria-label="카테고리"></nav>
   <div class="sec-title"><span id="secName">ALL CARTRIDGES</span><button class="sortbtn" id="sortBtn" type="button"></button></div>
   <main class="shelf" id="shelf"></main>
 
-  <!-- ===== DEV LOG ===== -->
   <section class="devlog" aria-label="DEV LOG">
     <div class="sec-head"><h2>DEV LOG<small>만드는 사람의 기록</small></h2><a class="more" id="logMore" href="/log.html">전체 로그 보기 <span class="bounce">▶</span></a></div>
     <div class="logs" id="logs"><div class="empty">로그 불러오는 중…</div></div>
@@ -95,132 +90,163 @@
 
 <script src="/arcade.js"></script>
 <script>
-/* =====================================================
-   카트리지 추가는 ITEMS에 한 덩어리만 넣으면 됩니다.
-   - no: 출시 순서대로 붙이는 고유 번호 (전체 공통, 한번 정하면 바꾸지 않기)
-   - cat: CATS 키 / date: YYYY-MM-DD (14일 이내면 NEW)
-   ===================================================== */
 const CATS = {
-  game: { name:'게임',   en:'GAMES', color:'#ff4f9a', dark:'#c22e70', cta:'▶ PLAY'  },
-  test: { name:'테스트', en:'TESTS', color:'#2bd47d', dark:'#169b56', cta:'✎ START' },
+  game: {
+    name: "게임",
+    en: "GAMES",
+    color: "#ff4f9a",
+    dark: "#c22e70",
+    cta: "▶ PLAY"
+  },
+  test: {
+    name: "테스트",
+    en: "TESTS",
+    color: "#2bd47d",
+    dark: "#169b56",
+    cta: "✎ START"
+  }
 };
-const ITEMS = [
-  { no:2, cat:'test', date:'2026-11-19',
-    title:'AI 안경 끼고 시험 보면 생기는 일', sub:'커닝 지능 테스트',
-    desc:'AI가 직접 채점하는 B급 시험. 로딩 걸리고, 틀린 답 우기고, 갑자기 말하는 AI 안경과 함께 10문항.',
-    url:'https://lumimori38.github.io/ai-glasses-exam/', img:'https://lumimori38.github.io/ai-glasses-exam/og-image.png',
-    tags:['10문항','결과 16종'] },
-  { no:1, cat:'game', date:'2026-11-14',
-    title:'최애 덕질 생존기', sub:'7년간 최애를 지켜라!',
-    desc:'수많은 응원봉 중 하나였던 나, 7년 뒤 너에게 나는 어떤 이름으로 남을까? 내 최애 이름으로 플레이하는 8비트 K-POP 덕질 시뮬레이션.',
-    url:'https://lumimori38.github.io/deokjil-survival/', img:'https://lumimori38.github.io/deokjil-survival/og-image.png',
-    tags:['엔딩 8종','도트 게임'] },
-];
+
+const ITEMS = [ {
+  no: 2,
+  cat: "test",
+  date: "2026-11-19",
+  title: "AI 안경 끼고 시험 보면 생기는 일",
+  sub: "커닝 지능 테스트",
+  desc: "AI가 직접 채점하는 B급 시험. 로딩 걸리고, 틀린 답 우기고, 갑자기 말하는 AI 안경과 함께 10문항.",
+  url: "https://lumimori38.github.io/ai-glasses-exam/",
+  img: "https://lumimori38.github.io/ai-glasses-exam/og-image.png",
+  tags: [ "10문항", "결과 16종" ]
+}, {
+  no: 1,
+  cat: "game",
+  date: "2026-11-14",
+  title: "최애 덕질 생존기",
+  sub: "7년간 최애를 지켜라!",
+  desc: "수많은 응원봉 중 하나였던 나, 7년 뒤 너에게 나는 어떤 이름으로 남을까? 내 최애 이름으로 플레이하는 8비트 K-POP 덕질 시뮬레이션.",
+  url: "https://lumimori38.github.io/deokjil-survival/",
+  img: "https://lumimori38.github.io/deokjil-survival/og-image.png",
+  tags: [ "엔딩 8종", "도트 게임" ]
+} ];
 
 const A = window.Arcade, $ = id => document.getElementById(id);
-A.mountSound($('snd'));
-const pad = n => String(n).padStart(3,'0');
-const isNew = d => (Date.now()-new Date(d+'T00:00:00+09:00'))/864e5 <= 14;
-const count = c => ITEMS.filter(i=>i.cat===c).length;
-let cat = 'all', sort = 'new';
 
-$('stats').innerHTML = Object.entries(CATS).map(([k,v])=>`${v.en.slice(0,-1)} ${count(k)}`).join('<br>');
-$('tabs').innerHTML = [['all','전체',ITEMS.length], ...Object.entries(CATS).map(([k,v])=>[k,v.name,count(k)])]
-  .map(([k,n,c])=>`<button class="tab" type="button" data-k="${k}">${n}<span class="n">${c}</span></button>`).join('');
+A.mountSound($("snd"));
 
-function card(i){
-  const c = CATS[i.cat] || { name:i.cat, color:'#7b5cff', dark:'#5a3fd0', cta:'▶ GO' };
-  return `<a class="cart" href="${i.url}" style="--c:${c.color};--c2:${c.dark}" aria-label="NO.${pad(i.no)} ${A.esc(i.title)}">
-    <div class="label">
-      <img class="thumb" src="${i.img}" alt="" loading="lazy">
-      <div class="info">
-        <div class="chips"><span class="chip cat">${c.name}</span>${isNew(i.date)?'<span class="chip new">NEW</span>':''}${(i.tags||[]).map(t=>`<span class="chip">${A.esc(t)}</span>`).join('')}</div>
-        <div class="title">${A.esc(i.title)}</div>
-        ${i.sub?`<div class="sub">${A.esc(i.sub)}</div>`:''}
-        <p class="desc">${A.esc(i.desc)}</p>
-      </div>
-    </div>
-    <div class="bottom"><span class="serial"><i></i>NO.${pad(i.no)}</span><span class="play"><span class="bounce">${c.cta.split(' ')[0]}</span> ${c.cta.split(' ').slice(1).join(' ')}</span></div>
-  </a>`;
+const pad = n => String(n).padStart(3, "0");
+
+const isNew = d => (Date.now() - new Date(d + "T00:00:00+09:00")) / 864e5 <= 14;
+
+const count = c => ITEMS.filter(i => i.cat === c).length;
+
+let cat = "all", sort = "new";
+
+$("stats").innerHTML = Object.entries(CATS).map(([k, v]) => `${v.en.slice(0, -1)} ${count(k)}`).join("<br>");
+
+$("tabs").innerHTML = [ [ "all", "전체", ITEMS.length ], ...Object.entries(CATS).map(([k, v]) => [ k, v.name, count(k) ]) ].map(([k, n, c]) => `<button class="tab" type="button" data-k="${k}">${n}<span class="n">${c}</span></button>`).join("");
+
+function card(i) {
+  const c = CATS[i.cat] || {
+    name: i.cat,
+    color: "#7b5cff",
+    dark: "#5a3fd0",
+    cta: "▶ GO"
+  };
+  return `<a class="cart" href="${i.url}" style="--c:${c.color};--c2:${c.dark}" aria-label="NO.${pad(i.no)} ${A.esc(i.title)}">\n    <div class="label">\n      <img class="thumb" src="${i.img}" alt="" loading="lazy">\n      <div class="info">\n        <div class="chips"><span class="chip cat">${c.name}</span>${isNew(i.date) ? '<span class="chip new">NEW</span>' : ""}${(i.tags || []).map(t => `<span class="chip">${A.esc(t)}</span>`).join("")}</div>\n        <div class="title">${A.esc(i.title)}</div>\n        ${i.sub ? `<div class="sub">${A.esc(i.sub)}</div>` : ""}\n        <p class="desc">${A.esc(i.desc)}</p>\n      </div>\n    </div>\n    <div class="bottom"><span class="serial"><i></i>NO.${pad(i.no)}</span><span class="play"><span class="bounce">${c.cta.split(" ")[0]}</span> ${c.cta.split(" ").slice(1).join(" ")}</span></div>\n  </a>`;
 }
-function render(){
-  document.querySelectorAll('.tab').forEach(t=>t.classList.toggle('on', t.dataset.k===cat));
-  $('secName').textContent = cat==='all' ? 'ALL CARTRIDGES' : CATS[cat].en;
-  $('sortBtn').innerHTML = (sort==='new' ? '최신순' : '오래된순') + '<span class="sw">⇅</span>';
-  $('sortBtn').setAttribute('aria-label', '정렬 바꾸기 (현재 '+(sort==='new'?'최신순':'오래된순')+')');
-  const list = ITEMS.filter(i=>cat==='all'||i.cat===cat)
-    .sort((a,b)=> sort==='new' ? (b.date.localeCompare(a.date)||b.no-a.no) : (a.date.localeCompare(b.date)||a.no-b.no));
-  $('shelf').innerHTML = list.map(card).join('') + `
-    <div class="soon" aria-label="다음 카트리지 제작 중">
-      <b>NEXT CARTRIDGE · NO.${pad(Math.max(...ITEMS.map(i=>i.no))+1)}</b>
-      <div class="loader" aria-hidden="true"><span id="ldBar">[□□□□□□□□□□]</span><span class="pct" id="ldPct">0%</span></div>
-      <div class="loader-msg" id="ldMsg">제작 중…</div>
-    </div>`;
-  document.querySelectorAll('.cart').forEach(a=>A.navigateWithSound(a,'insert',520));
+
+function render() {
+  document.querySelectorAll(".tab").forEach(t => t.classList.toggle("on", t.dataset.k === cat));
+  $("secName").textContent = cat === "all" ? "ALL CARTRIDGES" : CATS[cat].en;
+  $("sortBtn").innerHTML = (sort === "new" ? "최신순" : "오래된순") + '<span class="sw">⇅</span>';
+  $("sortBtn").setAttribute("aria-label", "정렬 바꾸기 (현재 " + (sort === "new" ? "최신순" : "오래된순") + ")");
+  const list = ITEMS.filter(i => cat === "all" || i.cat === cat).sort((a, b) => sort === "new" ? b.date.localeCompare(a.date) || b.no - a.no : a.date.localeCompare(b.date) || a.no - b.no);
+  $("shelf").innerHTML = list.map(card).join("") + `\n    <div class="soon" aria-label="다음 카트리지 제작 중">\n      <b>NEXT CARTRIDGE · NO.${pad(Math.max(...ITEMS.map(i => i.no)) + 1)}</b>\n      <div class="loader" aria-hidden="true"><span id="ldBar">[□□□□□□□□□□]</span><span class="pct" id="ldPct">0%</span></div>\n      <div class="loader-msg" id="ldMsg">제작 중…</div>\n    </div>`;
+  document.querySelectorAll(".cart").forEach(a => A.navigateWithSound(a, "insert", 520));
   startLoader();
 }
-$('tabs').addEventListener('click', e=>{
-  const t=e.target.closest('.tab'); if(!t) return;
-  cat = t.dataset.k in CATS ? t.dataset.k : 'all';
-  history.replaceState(null,'', cat==='all' ? location.pathname : '#'+cat);
+
+$("tabs").addEventListener("click", e => {
+  const t = e.target.closest(".tab");
+  if (!t) return;
+  cat = t.dataset.k in CATS ? t.dataset.k : "all";
+  history.replaceState(null, "", cat === "all" ? location.pathname : "#" + cat);
   render();
 });
-$('sortBtn').addEventListener('click', ()=>{ sort = sort==='new' ? 'old' : 'new'; render(); const s=$('sortBtn').querySelector('.sw'); s.classList.add('spin'); document.querySelectorAll('.cart').forEach((c,k)=>{ c.style.animation='none'; void c.offsetWidth; c.style.animation=`cartin .35s ${k*0.06}s both`; }); });
-window.addEventListener('hashchange', ()=>{ const h=location.hash.slice(1); cat = h in CATS ? h : 'all'; render(); });
-cat = location.hash.slice(1) in CATS ? location.hash.slice(1) : 'all';
 
-/* 픽셀 로딩바: 올라가다 99%에서 멈칫 → 다시 */
-let ldTimer=null;
-const MSGS=['제작 중…','도트 찍는 중…','버그 잡는 중…','B급 농도 조절 중…','거의 다 됨 (아님)'];
-function startLoader(){
-  clearInterval(ldTimer); let p=0, hold=0;
-  ldTimer=setInterval(()=>{
-    const bar=$('ldBar'), pct=$('ldPct'), msg=$('ldMsg'); if(!bar){ clearInterval(ldTimer); return; }
-    if(p>=99){ if(++hold>8){ p=0; hold=0; } }
-    else p=Math.min(99, p+Math.ceil(Math.random()*7));
-    const f=Math.floor(p/10);
-    bar.textContent='['+'■'.repeat(f)+'□'.repeat(10-f)+']';
-    pct.textContent=p+'%';
-    msg.textContent = p>=99 ? MSGS[4] : MSGS[Math.floor(p/25)%4];
+$("sortBtn").addEventListener("click", () => {
+  sort = sort === "new" ? "old" : "new";
+  render();
+  const s = $("sortBtn").querySelector(".sw");
+  s.classList.add("spin");
+  document.querySelectorAll(".cart").forEach((c, k) => {
+    c.style.animation = "none";
+    void c.offsetWidth;
+    c.style.animation = `cartin .35s ${k * .06}s both`;
+  });
+});
+
+window.addEventListener("hashchange", () => {
+  const h = location.hash.slice(1);
+  cat = h in CATS ? h : "all";
+  render();
+});
+
+cat = location.hash.slice(1) in CATS ? location.hash.slice(1) : "all";
+
+let ldTimer = null;
+
+const MSGS = [ "제작 중…", "도트 찍는 중…", "버그 잡는 중…", "B급 농도 조절 중…", "거의 다 됨 (아님)" ];
+
+function startLoader() {
+  clearInterval(ldTimer);
+  let p = 0, hold = 0;
+  ldTimer = setInterval(() => {
+    const bar = $("ldBar"), pct = $("ldPct"), msg = $("ldMsg");
+    if (!bar) {
+      clearInterval(ldTimer);
+      return;
+    }
+    if (p >= 99) {
+      if (++hold > 8) {
+        p = 0;
+        hold = 0;
+      }
+    } else p = Math.min(99, p + Math.ceil(Math.random() * 7));
+    const f = Math.floor(p / 10);
+    bar.textContent = "[" + "■".repeat(f) + "□".repeat(10 - f) + "]";
+    pct.textContent = p + "%";
+    msg.textContent = p >= 99 ? MSGS[4] : MSGS[Math.floor(p / 25) % 4];
   }, 420);
 }
+
 render();
 
-/* 이름 글자가 하나씩 통통 튀는 웨이브 */
-(function(){
-  const h=$('heroName'); h.innerHTML=[...h.textContent].map((ch,k)=>ch===' '?'<span class="sp"> </span>':`<span class="wv" aria-hidden="true" style="--d:${k*0.07}s">${ch}</span>`).join('');
-  const wave=()=>{ h.classList.remove('waving'); void h.offsetWidth; h.classList.add('waving'); };
-  setTimeout(wave, 500); setInterval(wave, 7000);
-  h.addEventListener('click', ()=>{ wave(); A.play('click'); });
-})();
+document.querySelectorAll(".dpad, .ab span").forEach(el => el.addEventListener("click", () => A.play("click")));
 
-/* 장식 버튼도 눌러보면 소리 */
-document.querySelectorAll('.dpad, .ab span').forEach(el=>el.addEventListener('click', ()=>A.play('click')));
-
-/* 히어로 버튼 */
-$('btnShare').addEventListener('click', async ()=>{
+$("btnShare").addEventListener("click", async () => {
   const ok = await A.copyText(A.SITE.url);
-  ok ? A.flash($('btnShare'), '✔ 링크 복사 완료!') : A.toast(A.SITE.url);
-});
-if(A.isStandalone()) $('btnInstall').style.display='none';
-$('btnInstall').addEventListener('click', A.installApp);
-$('copyMail').addEventListener('click', async ()=>{
-  const ok = await A.copyText('lumimori38@gmail.com');
-  if(ok) A.flash(document.querySelector('.collab .mail'), '✔ 메일 주소 복사 완료!');
+  ok ? A.flash($("btnShare"), "✔ 링크 복사 완료!") : A.toast(A.SITE.url);
 });
 
-/* DEV LOG 미리보기 (최신 2개) */
-A.navigateWithSound($('logMore'),'move',230);
-A.loadLogs().then(d=>{
-  const top=d.entries.slice(0,2);
-  $('logs').innerHTML = top.length ? top.map(e=>{
-    const t=A.TAGS[e.tag]||A.TAGS.UPDATE;
-    return `<a class="logrow" href="/log.html#${encodeURIComponent(e.id)}">
-      <span class="ltag" style="--t:${t.color}">${A.pixIcon(t.icon,'#fff')}${e.tag}</span>
-      <span class="ltitle">${A.esc(e.title)}</span>
-      <span class="ldate">${A.fmtDate(e.date).slice(5)}</span></a>`;
-  }).join('') : '<div class="empty">아직 기록이 없어요</div>';
-  document.querySelectorAll('.logrow').forEach(a=>A.navigateWithSound(a,'move',230));
+if (A.isStandalone()) $("btnInstall").style.display = "none";
+
+$("btnInstall").addEventListener("click", A.installApp);
+
+$("copyMail").addEventListener("click", async () => {
+  const ok = await A.copyText("lumimori38@gmail.com");
+  if (ok) A.flash(document.querySelector(".collab .mail"), "✔ 메일 주소 복사 완료!");
+});
+
+A.navigateWithSound($("logMore"), "move", 230);
+
+A.loadLogs().then(d => {
+  const top = d.entries.slice(0, 2);
+  $("logs").innerHTML = top.length ? top.map(e => {
+    const t = A.TAGS[e.tag] || A.TAGS.UPDATE;
+    return `<a class="logrow" href="/log.html#${encodeURIComponent(e.id)}">\n      <span class="ltag" style="--t:${t.color}">${A.pixIcon(t.icon, "#fff")}${e.tag}</span>\n      <span class="ltitle">${A.esc(e.title)}</span>\n      <span class="ldate">${A.fmtDate(e.date).slice(5)}</span></a>`;
+  }).join("") : '<div class="empty">아직 기록이 없어요</div>';
+  document.querySelectorAll(".logrow").forEach(a => A.navigateWithSound(a, "move", 230));
 });
 </script>
 </body>
