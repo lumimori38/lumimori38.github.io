@@ -2,268 +2,212 @@
 <html lang="ko">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>lumimori38 | B급 테스트·게임 오락실</title>
-<meta name="description" content="lumimori38이 만든 B급 테스트와 웹게임 모음 — 최애 덕질 생존기, AI 안경 끼고 시험 보면 생기는 일">
-<meta name="keywords" content="최애 덕질 생존기, 덕질 게임, 아이돌 게임, K-POP 게임, 무료 웹게임, 도트 게임, AI 안경 테스트, 커닝 지능 테스트, 심리테스트, 유형테스트">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>루미 오락실🎮 — B급 테스트·게임 모음 (lumimori38)</title>
+<meta name="description" content="쓸데없이 진심인 B급 테스트와 웹게임 모음. 최애 덕질 생존기, AI 안경 끼고 시험 보면 생기는 일 — 루미 오락실 by lumimori38">
+<meta name="keywords" content="루미 오락실, 최애 덕질 생존기, 덕질 게임, 아이돌 게임, K-POP 게임, 무료 웹게임, 도트 게임, AI 안경 테스트, 커닝 지능 테스트, 심리테스트, 유형테스트, lumimori38">
 <meta name="robots" content="index, follow">
+<link rel="canonical" href="https://lumimori38.github.io/">
 <meta property="og:type" content="website">
-<meta property="og:title" content="lumimori38 오락실 — B급 테스트·게임 모음">
-<meta property="og:description" content="최애 덕질 생존기 · AI 안경 끼고 시험 보면 생기는 일 · 그리고 계속 추가 중">
+<meta property="og:site_name" content="루미 오락실">
+<meta property="og:title" content="루미 오락실🎮 — B급 테스트·게임 모음 (lumimori38)">
+<meta property="og:description" content="최애 덕질 생존기 · AI 안경 끼고 시험 보면 생기는 일 · 새 카트리지 계속 추가 중">
 <meta property="og:image" content="https://lumimori38.github.io/og-hub.png">
 <meta property="og:url" content="https://lumimori38.github.io/">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:creator" content="@lumimori38">
+<meta name="twitter:title" content="루미 오락실🎮 — B급 테스트·게임 모음 (lumimori38)">
 <meta name="twitter:image" content="https://lumimori38.github.io/og-hub.png">
+<!-- 홈 화면 앱 -->
+<link rel="manifest" href="/manifest.webmanifest">
+<meta name="theme-color" content="#ffd23f">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="루미 오락실">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/galmuri@2.40.3/dist/galmuri.css">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
-<style>
-  :root{
-    --bg:#f6efe6;
-    --ink:#211a3a;
-    --ink-soft:#6b6385;
-    --shell:#ffd23f;
-    --shell-dark:#e2ad12;
-    --screen:#1b1630;
-    --lcd:#9bff6b;
-    --pink:#ff4f9a;
-    --mint:#2bd47d;
-    --sky:#4fc3ff;
-    --yellow:#ffd23f;
-    --pixel:'Galmuri11','Galmuri9',monospace;
-    --sans:'Pretendard','Apple SD Gothic Neo','Malgun Gothic',sans-serif;
-  }
-  *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
-  html{background:var(--bg)}
-  body{font-family:var(--sans);color:var(--ink);min-height:100vh;
-    background:
-      radial-gradient(rgba(33,26,58,.07) 1.2px, transparent 1.2px) 0 0/18px 18px,
-      var(--bg)}
-  a{color:inherit;text-decoration:none}
-  .wrap{max-width:760px;margin:0 auto;padding:22px 18px 40px}
-
-  /* ---------- 게임기 헤더 ---------- */
-  .console{background:var(--shell);border-radius:22px 22px 46px 22px;padding:16px 16px 18px;
-    box-shadow:inset 0 -6px 0 var(--shell-dark), 0 10px 24px rgba(33,26,58,.12);position:relative}
-  .console .brandline{display:flex;justify-content:space-between;align-items:center;font-family:var(--pixel);font-size:11px;color:#8a6a00;margin:0 4px 10px}
-  .console .brandline i{display:inline-block;width:8px;height:8px;border-radius:50%;background:#ff3b5c;margin-right:6px;box-shadow:0 0 6px #ff3b5c;animation:pulse 1.6s infinite}
-  @keyframes pulse{50%{opacity:.35}}
-  .screen{background:var(--screen);border-radius:10px;padding:20px 18px 18px;position:relative;overflow:hidden;
-    box-shadow:inset 0 0 0 4px #2d2650, inset 0 0 30px rgba(155,255,107,.08)}
-  .screen::after{content:"";position:absolute;inset:0;pointer-events:none;
-    background:repeating-linear-gradient(0deg,rgba(255,255,255,.035) 0 2px,transparent 2px 4px)}
-  .hello{font-family:var(--pixel);color:var(--lcd);font-size:12px;opacity:.85}
-  .name{font-family:var(--pixel);font-weight:700;color:#fff;font-size:clamp(30px,9vw,46px);line-height:1.15;margin-top:6px;letter-spacing:-.5px;
-    text-shadow:3px 3px 0 #c98f00}
-  .bio{color:#cfc8ea;font-size:14px;line-height:1.6;margin-top:8px;word-break:keep-all}
-  .bio b{color:var(--yellow);font-weight:700}
-  .press{font-family:var(--pixel);color:var(--yellow);font-size:12px;margin-top:14px}
-  .press span{animation:blink 1s steps(2) infinite}
-  @keyframes blink{50%{opacity:0}}
-  .stats{position:absolute;right:16px;top:18px;font-family:var(--pixel);font-size:11px;color:var(--lcd);text-align:right;line-height:1.6;opacity:.85}
-  .controls{display:flex;justify-content:space-between;align-items:center;margin-top:16px;padding:0 6px}
-  .dpad{width:58px;height:58px;position:relative}
-  .dpad::before,.dpad::after{content:"";position:absolute;background:#2a2346;border-radius:4px}
-  .dpad::before{left:20px;top:0;width:18px;height:58px}
-  .dpad::after{top:20px;left:0;width:58px;height:18px}
-  .social{display:flex;gap:10px;align-items:center}
-  .sns{width:42px;height:42px;border-radius:50%;background:#2a2346;color:#fff;display:flex;align-items:center;justify-content:center;
-    box-shadow:inset 0 -4px 0 #120e24;transition:transform .12s}
-  .sns svg{width:19px;height:19px;fill:currentColor}
-  .sns:hover{transform:translateY(-2px)}
-  .sns:active{transform:translateY(2px);box-shadow:none}
-  .sns-label{font-family:var(--pixel);font-size:10.5px;color:#8a6a00;text-align:center;margin-top:10px;letter-spacing:.02em}
-
-  /* 협업 문의 */
-  .collab{margin-top:16px;background:#fff;border-radius:16px;padding:16px 16px 14px;box-shadow:0 0 0 1.5px rgba(33,26,58,.1), 0 8px 18px rgba(33,26,58,.06);
-    display:grid;grid-template-columns:auto 1fr;gap:4px 14px;align-items:center}
-  .collab .ic{grid-row:span 2;width:46px;height:46px;border-radius:12px;background:var(--yellow);display:flex;align-items:center;justify-content:center;box-shadow:inset 0 -4px 0 var(--shell-dark)}
-  .collab .ic svg{width:22px;height:22px;fill:var(--ink)}
-  .collab .t{font-weight:800;font-size:15.5px;letter-spacing:-.2px}
-  .collab .t small{font-family:var(--pixel);font-weight:400;font-size:10.5px;color:var(--ink-soft);margin-left:6px}
-  .collab .mail{font-family:var(--pixel);font-size:13px;color:var(--ink-soft);word-break:break-all}
-  .collab .acts{grid-column:1/-1;display:flex;gap:8px;margin-top:10px}
-  .collab .acts a,.collab .acts button{flex:1;text-align:center;font-family:var(--pixel);font-size:12.5px;padding:10px 0;border-radius:10px;border:none;cursor:pointer;color:var(--ink)}
-  .collab .acts .go{background:var(--yellow);box-shadow:inset 0 -3px 0 var(--shell-dark)}
-  .collab .acts .cp{background:#f1ecf8;box-shadow:inset 0 -3px 0 rgba(33,26,58,.12)}
-  .toast{position:fixed;left:50%;bottom:24px;transform:translate(-50%,20px);opacity:0;transition:.2s;background:var(--ink);color:var(--yellow);font-family:var(--pixel);font-size:12px;padding:9px 14px;border-radius:999px;pointer-events:none;z-index:9}
-  .toast.show{opacity:1;transform:translate(-50%,0)}
-  .ab{display:flex;gap:10px}
-  .ab span{width:34px;height:34px;border-radius:50%;background:var(--pink);box-shadow:inset 0 -4px 0 #c22e70;display:flex;align-items:center;justify-content:center;color:#fff;font-family:var(--pixel);font-size:12px}
-  @media (max-width:460px){.ab{display:none}.dpad{transform:scale(.8);transform-origin:left center}.controls{padding:0 2px}}
-  .ab span:last-child{background:var(--sky);box-shadow:inset 0 -4px 0 #2a8fc4;transform:translateY(-10px)}
-
-  /* ---------- 카테고리 탭 ---------- */
-  .tabs{display:flex;gap:8px;margin:26px 0 16px;overflow-x:auto;scrollbar-width:none;padding-bottom:4px}
-  .tabs::-webkit-scrollbar{display:none}
-  .tab{flex-shrink:0;font-family:var(--pixel);font-size:13px;border:none;cursor:pointer;color:var(--ink);background:#fff;
-    padding:10px 14px;border-radius:10px;box-shadow:inset 0 -3px 0 rgba(33,26,58,.12), 0 0 0 1.5px rgba(33,26,58,.1)}
-  .tab .n{display:inline-block;min-width:20px;margin-left:6px;padding:1px 6px;border-radius:999px;background:#efe9f8;font-size:11px;color:var(--ink-soft)}
-  .tab.on{background:var(--yellow);color:var(--ink);box-shadow:inset 0 -3px 0 var(--shell-dark), 0 0 0 1.5px rgba(33,26,58,.12)}
-  .tab.on .n{background:var(--ink);color:var(--yellow)}
-  .sec-title{font-family:var(--pixel);font-size:12px;color:var(--ink-soft);margin:0 2px 12px;display:flex;justify-content:space-between}
-
-  /* ---------- 카트리지 ---------- */
-  .shelf{display:grid;grid-template-columns:1fr;gap:22px}
-  @media (min-width:640px){.shelf{grid-template-columns:1fr 1fr}}
-  .cart{--c:var(--pink);--c2:#c22e70;position:relative;display:block;background:var(--c);border-radius:16px 16px 10px 10px;padding:22px 14px 14px;
-    box-shadow:inset 0 -6px 0 var(--c2), inset 0 3px 0 rgba(255,255,255,.35), 0 10px 22px rgba(33,26,58,.14);
-    transition:transform .18s ease, box-shadow .18s ease}
-  .cart:hover{transform:translateY(-6px) rotate(-.4deg)}
-  .cart:active{transform:translateY(-2px)}
-  .cart::before{content:"";position:absolute;left:22px;right:22px;top:8px;height:6px;border-radius:3px;
-    background:repeating-linear-gradient(90deg,rgba(0,0,0,.18) 0 6px,transparent 6px 11px)}
-  .label{background:#fffdf8;border-radius:8px;overflow:hidden;box-shadow:0 0 0 3px rgba(0,0,0,.08)}
-  .thumb{display:block;width:100%;aspect-ratio:1200/630;object-fit:cover;background:#eee8f5}
-  .info{padding:12px 13px 13px}
-  .chips{display:flex;gap:6px;align-items:center;flex-wrap:wrap}
-  .chip{font-family:var(--pixel);font-size:10.5px;padding:3px 8px;border-radius:5px;background:#f1ecf8;color:var(--ink-soft)}
-  .chip.cat{background:var(--c);color:#fff}
-  .chip.new{background:var(--yellow);color:var(--ink);animation:blink 1.2s steps(2) infinite}
-  .title{font-size:18px;font-weight:800;line-height:1.35;margin-top:8px;word-break:keep-all;letter-spacing:-.3px}
-  .sub{font-size:13px;font-weight:600;color:var(--ink-soft);margin-top:2px}
-  .desc{font-size:13.5px;line-height:1.6;color:#4a4366;margin-top:8px;word-break:keep-all}
-  .bottom{display:flex;justify-content:space-between;align-items:center;margin-top:12px;padding:0 4px}
-  .grip{width:58px;height:14px;background:repeating-linear-gradient(90deg,rgba(0,0,0,.2) 0 3px,transparent 3px 7px);border-radius:2px}
-  .play{font-family:var(--pixel);font-size:13px;color:#fff;background:rgba(0,0,0,.22);padding:8px 12px;border-radius:8px}
-  .cart:hover .play{background:rgba(0,0,0,.35)}
-
-  .soon{border:3px dashed rgba(33,26,58,.22);border-radius:16px;min-height:180px;display:flex;flex-direction:column;align-items:center;justify-content:center;
-    text-align:center;color:var(--ink-soft);font-family:var(--pixel);font-size:13px;line-height:1.8;padding:24px;background:rgba(255,255,255,.35)}
-  .soon b{font-size:15px;color:var(--ink)}
-  .empty{display:none}
-
-  footer{margin-top:36px;text-align:center;word-break:keep-all;font-family:var(--pixel);font-size:11px;color:var(--ink-soft);line-height:1.9}
-  footer a{color:var(--ink);text-decoration:underline;text-underline-offset:3px}
-</style>
+<link rel="stylesheet" href="/style.css">
 </head>
 <body>
 <div class="wrap">
 
+  <!-- ===== 히어로: 게임기 ===== -->
   <header class="console">
-    <div class="brandline"><span><i></i>POWER</span><span>LUMI·BOY COLOR</span></div>
+    <div class="brandline">
+      <span class="pw"><i></i>POWER</span>
+      <span>LUMI·BOY COLOR</span>
+      <div class="snd" id="snd"></div>
+    </div>
     <div class="screen">
-      <div class="stats" id="stats">GAME 0<br>TEST 0</div>
-      <div class="hello">&gt; HELLO, PLAYER</div>
-      <h1 class="name">lumimori38</h1>
-      <p class="bio">쓸데없이 진심인 <b>B급 테스트</b>와 <b>웹게임</b>을 만듭니다.<br>카트리지를 골라 꽂아 보세요.</p>
-      <div class="press">▶ PRESS START<span>_</span></div>
+      <div class="stats" id="stats"></div>
+      <div class="hello">&gt; HELLO, PLAYER! I'M <b>lumimori38</b><span class="cur">_</span></div>
+      <h1 class="name">루미 오락실</h1>
+      <p class="bio">쓸데없이 진심인 <b>B급 테스트</b>와 <b>웹게임</b>을 만듭니다. 카트리지를 골라 꽂아 보세요.</p>
+      <div class="hero-acts">
+        <button class="hbtn share" id="btnShare" type="button">⧉ 링크 공유</button>
+        <button class="hbtn install" id="btnInstall" type="button">＋ 홈 화면에 추가</button>
+      </div>
     </div>
     <div class="controls">
       <div class="dpad" aria-hidden="true"></div>
-      <div>
-        <nav class="social" aria-label="SNS">
-          <a class="sns" href="https://x.com/lumimori38" target="_blank" rel="noopener noreferrer" aria-label="X(트위터) @lumimori38"><svg viewBox="0 0 24 24"><path d="M17.8 2.5h3.3l-7.2 8.2 8.5 10.8h-6.6l-5.2-6.6-5.9 6.6H1.4l7.7-8.8L1 2.5h6.8l4.7 6.1 5.3-6.1zm-1.2 17h1.8L7.5 4.4H5.5l11.1 15.1z"/></svg></a>
-          <a class="sns" href="https://www.instagram.com/lumimori38/" target="_blank" rel="noopener noreferrer" aria-label="인스타그램 @lumimori38"><svg viewBox="0 0 24 24"><path d="M12 7.2A4.8 4.8 0 1 0 12 16.8 4.8 4.8 0 0 0 12 7.2zm0 7.9a3.1 3.1 0 1 1 0-6.2 3.1 3.1 0 0 1 0 6.2zM17.1 5.7a1.1 1.1 0 1 0 0 2.2 1.1 1.1 0 0 0 0-2.2zM12 2.2c-2.7 0-3 0-4 .1-4.3.2-5.6 2.4-5.7 5.7-.1 1-.1 1.3-.1 4s0 3 .1 4c.2 4.3 2.4 5.6 5.7 5.7 1 .1 1.3.1 4 .1s3 0 4-.1c4.3-.2 5.6-2.4 5.7-5.7.1-1 .1-1.3.1-4s0-3-.1-4c-.2-4.3-2.4-5.6-5.7-5.7-1-.1-1.3-.1-4-.1zm0 1.8c2.6 0 2.9 0 4 .1 2.7.1 3.9 1.4 4 4 .1 1 .1 1.4.1 4s0 2.9-.1 4c-.1 2.6-1.3 3.9-4 4-1 .1-1.4.1-4 .1s-2.9 0-4-.1c-2.7-.1-3.9-1.4-4-4-.1-1-.1-1.4-.1-4s0-2.9.1-4c.1-2.6 1.3-3.9 4-4 1-.1 1.4-.1 4-.1z"/></svg></a>
-          <a class="sns" href="https://www.youtube.com/@lumimori38" target="_blank" rel="noopener noreferrer" aria-label="유튜브 @lumimori38"><svg viewBox="0 0 24 24"><path d="M23 7.2a3 3 0 0 0-2.1-2.1C19 4.6 12 4.6 12 4.6s-7 0-8.9.5A3 3 0 0 0 1 7.2C.5 9.1.5 12 .5 12s0 2.9.5 4.8a3 3 0 0 0 2.1 2.1c1.9.5 8.9.5 8.9.5s7 0 8.9-.5a3 3 0 0 0 2.1-2.1c.5-1.9.5-4.8.5-4.8s0-2.9-.5-4.8zM9.7 15.3V8.7l5.8 3.3-5.8 3.3z"/></svg></a>
-        </nav>
-        <div class="sns-label">@lumimori38</div>
-      </div>
+      <nav class="social" aria-label="SNS">
+        <a class="sns" href="https://x.com/lumimori38" target="_blank" rel="noopener noreferrer" aria-label="X(트위터) @lumimori38"><svg viewBox="0 0 24 24"><path d="M17.8 2.5h3.3l-7.2 8.2 8.5 10.8h-6.6l-5.2-6.6-5.9 6.6H1.4l7.7-8.8L1 2.5h6.8l4.7 6.1 5.3-6.1zm-1.2 17h1.8L7.5 4.4H5.5l11.1 15.1z"/></svg></a>
+        <a class="sns" href="https://www.instagram.com/lumimori38/" target="_blank" rel="noopener noreferrer" aria-label="인스타그램 @lumimori38"><svg viewBox="0 0 24 24"><path d="M12 7.2A4.8 4.8 0 1 0 12 16.8 4.8 4.8 0 0 0 12 7.2zm0 7.9a3.1 3.1 0 1 1 0-6.2 3.1 3.1 0 0 1 0 6.2zM17.1 5.7a1.1 1.1 0 1 0 0 2.2 1.1 1.1 0 0 0 0-2.2zM12 2.2c-2.7 0-3 0-4 .1-4.3.2-5.6 2.4-5.7 5.7-.1 1-.1 1.3-.1 4s0 3 .1 4c.2 4.3 2.4 5.6 5.7 5.7 1 .1 1.3.1 4 .1s3 0 4-.1c4.3-.2 5.6-2.4 5.7-5.7.1-1 .1-1.3.1-4s0-3-.1-4c-.2-4.3-2.4-5.6-5.7-5.7-1-.1-1.3-.1-4-.1zm0 1.8c2.6 0 2.9 0 4 .1 2.7.1 3.9 1.4 4 4 .1 1 .1 1.4.1 4s0 2.9-.1 4c-.1 2.6-1.3 3.9-4 4-1 .1-1.4.1-4 .1s-2.9 0-4-.1c-2.7-.1-3.9-1.4-4-4-.1-1-.1-1.4-.1-4s0-2.9.1-4c.1-2.6 1.3-3.9 4-4 1-.1 1.4-.1 4-.1z"/></svg></a>
+        <a class="sns" href="https://www.youtube.com/@lumimori38" target="_blank" rel="noopener noreferrer" aria-label="유튜브 @lumimori38"><svg viewBox="0 0 24 24"><path d="M23 7.2a3 3 0 0 0-2.1-2.1C19 4.6 12 4.6 12 4.6s-7 0-8.9.5A3 3 0 0 0 1 7.2C.5 9.1.5 12 .5 12s0 2.9.5 4.8a3 3 0 0 0 2.1 2.1c1.9.5 8.9.5 8.9.5s7 0 8.9-.5a3 3 0 0 0 2.1-2.1c.5-1.9.5-4.8.5-4.8s0-2.9-.5-4.8zM9.7 15.3V8.7l5.8 3.3-5.8 3.3z"/></svg></a>
+      </nav>
       <div class="ab" aria-hidden="true"><span>B</span><span>A</span></div>
     </div>
   </header>
 
-  <section class="collab" aria-label="협업 문의">
-    <div class="ic"><svg viewBox="0 0 24 24"><path d="M3 5h18a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1zm9 7.2L4.3 7H4v.6l8 5.4 8-5.4V7h-.3L12 12.2z"/></svg></div>
-    <div class="t">협업·제작 문의<small>COLLAB</small></div>
-    <div class="mail">lumimori38@gmail.com</div>
-    <div class="acts"><a class="go" href="mailto:lumimori38@gmail.com?subject=%5B%ED%98%91%EC%97%85%20%EB%AC%B8%EC%9D%98%5D%20">✉ 메일 보내기</a><button class="cp" id="copyMail">주소 복사</button></div>
+  <!-- ===== 협업 문의 ===== -->
+  <section class="collab" aria-label="협업·제작 문의">
+    <a class="main ui-link" href="mailto:lumimori38@gmail.com?subject=%5B%ED%98%91%EC%97%85%20%EB%AC%B8%EC%9D%98%5D%20">
+      <span class="t">협업·제작 문의 <span class="arr">▶</span></span>
+      <span class="mail">lumimori38@gmail.com</span>
+    </a>
+    <div class="acts">
+      <a class="ibtn ui-link" href="mailto:lumimori38@gmail.com?subject=%5B%ED%98%91%EC%97%85%20%EB%AC%B8%EC%9D%98%5D%20" aria-label="메일 보내기" title="메일 보내기"><svg viewBox="0 0 24 24"><path d="M3 5h18a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1zm9 7.2L4.3 7H4v.6l8 5.4 8-5.4V7h-.3L12 12.2z"/></svg></a>
+      <button class="ibtn" id="copyMail" type="button" aria-label="메일 주소 복사" title="주소 복사"><svg viewBox="0 0 24 24"><path d="M8 3h11a2 2 0 0 1 2 2v11h-2V5H8V3zM5 7h10a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V9a2 2 0 0 1 2-2zm0 2v10h10V9H5z"/></svg></button>
+    </div>
   </section>
 
+  <!-- ===== 카트리지 선반 ===== -->
   <nav class="tabs" id="tabs" aria-label="카테고리"></nav>
-  <div class="sec-title"><span id="secName">ALL CARTRIDGES</span><span>NEW → OLD</span></div>
+  <div class="sec-title"><span id="secName">ALL CARTRIDGES</span><button class="sortbtn" id="sortBtn" type="button"></button></div>
   <main class="shelf" id="shelf"></main>
 
+  <!-- ===== DEV LOG ===== -->
+  <section class="devlog" aria-label="DEV LOG">
+    <div class="sec-head"><h2>DEV LOG<small>만드는 사람의 기록</small></h2><a class="more" id="logMore" href="/log.html">전체 로그 보기 ▶</a></div>
+    <div class="logs" id="logs"><div class="empty">로그 불러오는 중…</div></div>
+  </section>
+
   <footer>
-    계속 업데이트 중<br>새 카트리지는 <a href="https://x.com/lumimori38" target="_blank" rel="noopener noreferrer">X</a> · <a href="https://www.instagram.com/lumimori38/" target="_blank" rel="noopener noreferrer">Instagram</a>에서 먼저 공개<br>
-    © lumimori38
+    계속 업데이트 중<br>
+    새 카트리지는 <a href="https://x.com/lumimori38" target="_blank" rel="noopener noreferrer">X</a> · <a href="https://www.instagram.com/lumimori38/" target="_blank" rel="noopener noreferrer">Instagram</a>에서 먼저 공개<br>
+    © 루미 오락실 · lumimori38
   </footer>
 </div>
-<div class="toast" id="toast"></div>
 
+<script src="/arcade.js"></script>
 <script>
 /* =====================================================
-   콘텐츠 추가는 여기만 수정하면 됩니다.
-   - 맨 위에 한 줄(객체) 추가 → 자동으로 최신순 정렬, 탭 개수 반영
-   - cat: CATS에 있는 키 (새 카테고리는 CATS에 한 줄 추가)
-   - date: YYYY-MM-DD (14일 이내면 NEW 표시)
+   카트리지 추가는 ITEMS에 한 덩어리만 넣으면 됩니다.
+   - no: 출시 순서대로 붙이는 고유 번호 (전체 공통, 한번 정하면 바꾸지 않기)
+   - cat: CATS 키 / date: YYYY-MM-DD (14일 이내면 NEW)
    ===================================================== */
 const CATS = {
-  game: { name:'게임',   en:'GAMES', color:'#ff4f9a', dark:'#c22e70', cta:'▶ PLAY' },
+  game: { name:'게임',   en:'GAMES', color:'#ff4f9a', dark:'#c22e70', cta:'▶ PLAY'  },
   test: { name:'테스트', en:'TESTS', color:'#2bd47d', dark:'#169b56', cta:'✎ START' },
 };
-
 const ITEMS = [
-  {
-    cat:'test',
-    title:'AI 안경 끼고 시험 보면 생기는 일',
-    sub:'커닝 지능 테스트',
+  { no:2, cat:'test', date:'2026-11-19',
+    title:'AI 안경 끼고 시험 보면 생기는 일', sub:'커닝 지능 테스트',
     desc:'AI가 직접 채점하는 B급 시험. 로딩 걸리고, 틀린 답 우기고, 갑자기 말하는 AI 안경과 함께 10문항.',
-    url:'https://lumimori38.github.io/ai-glasses-exam/',
-    img:'https://lumimori38.github.io/ai-glasses-exam/og-image.png',
-    date:'2026-11-19',
-    tags:['10문항','결과 16종'],
-  },
-  {
-    cat:'game',
-    title:'최애 덕질 생존기',
-    sub:'7년간 최애를 지켜라!',
+    url:'https://lumimori38.github.io/ai-glasses-exam/', img:'https://lumimori38.github.io/ai-glasses-exam/og-image.png',
+    tags:['10문항','결과 16종'] },
+  { no:1, cat:'game', date:'2026-11-15',
+    title:'최애 덕질 생존기', sub:'7년간 최애를 지켜라!',
     desc:'수많은 응원봉 중 하나였던 나, 7년 뒤 너에게 나는 어떤 이름으로 남을까? 내 최애 이름으로 플레이하는 8비트 K-POP 덕질 시뮬레이션.',
-    url:'https://lumimori38.github.io/deokjil-survival/',
-    img:'https://lumimori38.github.io/deokjil-survival/og-image.png',
-    date:'2026-11-15',
-    tags:['엔딩 8종','도트 게임'],
-  },
+    url:'https://lumimori38.github.io/deokjil-survival/', img:'https://lumimori38.github.io/deokjil-survival/og-image.png',
+    tags:['엔딩 8종','도트 게임'] },
 ];
 
-/* ---------- 렌더링 ---------- */
-const $=id=>document.getElementById(id);
-const items=[...ITEMS].sort((a,b)=>b.date.localeCompare(a.date));
-const isNew=d=>(Date.now()-new Date(d+'T00:00:00+09:00'))/864e5<=14;
-const count=c=>items.filter(i=>i.cat===c).length;
+const A = window.Arcade, $ = id => document.getElementById(id);
+A.mountSound($('snd'));
+const pad = n => String(n).padStart(3,'0');
+const isNew = d => (Date.now()-new Date(d+'T00:00:00+09:00'))/864e5 <= 14;
+const count = c => ITEMS.filter(i=>i.cat===c).length;
+let cat = 'all', sort = 'new';
 
-$('stats').innerHTML=Object.entries(CATS).map(([k,v])=>`${v.en.slice(0,-1)} ${count(k)}`).join('<br>');
-
-const tabs=[['all','전체',items.length],...Object.entries(CATS).map(([k,v])=>[k,v.name,count(k)])];
-$('tabs').innerHTML=tabs.map(([k,n,c])=>`<button class="tab" data-k="${k}">${n}<span class="n">${c}</span></button>`).join('');
+$('stats').innerHTML = Object.entries(CATS).map(([k,v])=>`${v.en.slice(0,-1)} ${count(k)}`).join('<br>');
+$('tabs').innerHTML = [['all','전체',ITEMS.length], ...Object.entries(CATS).map(([k,v])=>[k,v.name,count(k)])]
+  .map(([k,n,c])=>`<button class="tab" type="button" data-k="${k}">${n}<span class="n">${c}</span></button>`).join('');
 
 function card(i){
-  const c=CATS[i.cat]||{name:i.cat,color:'#7b5cff',dark:'#5a3fd0',cta:'▶ GO'};
-  return `<a class="cart" href="${i.url}" style="--c:${c.color};--c2:${c.dark}">
+  const c = CATS[i.cat] || { name:i.cat, color:'#7b5cff', dark:'#5a3fd0', cta:'▶ GO' };
+  return `<a class="cart" href="${i.url}" style="--c:${c.color};--c2:${c.dark}" aria-label="NO.${pad(i.no)} ${A.esc(i.title)}">
     <div class="label">
-      <img class="thumb" src="${i.img}" alt="${i.title}" loading="lazy">
+      <img class="thumb" src="${i.img}" alt="" loading="lazy">
       <div class="info">
-        <div class="chips"><span class="chip cat">${c.name}</span>${isNew(i.date)?'<span class="chip new">NEW</span>':''}${(i.tags||[]).map(t=>`<span class="chip">${t}</span>`).join('')}</div>
-        <div class="title">${i.title}</div>
-        ${i.sub?`<div class="sub">${i.sub}</div>`:''}
-        <p class="desc">${i.desc}</p>
+        <div class="chips"><span class="chip cat">${c.name}</span>${isNew(i.date)?'<span class="chip new">NEW</span>':''}${(i.tags||[]).map(t=>`<span class="chip">${A.esc(t)}</span>`).join('')}</div>
+        <div class="title">${A.esc(i.title)}</div>
+        ${i.sub?`<div class="sub">${A.esc(i.sub)}</div>`:''}
+        <p class="desc">${A.esc(i.desc)}</p>
       </div>
     </div>
-    <div class="bottom"><span class="grip"></span><span class="play">${c.cta}</span></div>
+    <div class="bottom"><span class="serial"><i></i>NO.${pad(i.no)}</span><span class="play">${c.cta}</span></div>
   </a>`;
 }
-
-function render(k){
-  if(!(k in CATS)) k='all';
-  document.querySelectorAll('.tab').forEach(t=>t.classList.toggle('on',t.dataset.k===k));
-  $('secName').textContent=k==='all'?'ALL CARTRIDGES':CATS[k].en;
-  const list=k==='all'?items:items.filter(i=>i.cat===k);
-  $('shelf').innerHTML=list.map(card).join('')+
-    `<div class="soon"><b>NEXT CARTRIDGE</b>제작 중…<br>다음 B급 콘텐츠를 기다려 주세요</div>`;
+function render(){
+  document.querySelectorAll('.tab').forEach(t=>t.classList.toggle('on', t.dataset.k===cat));
+  $('secName').textContent = cat==='all' ? 'ALL CARTRIDGES' : CATS[cat].en;
+  $('sortBtn').innerHTML = sort==='new' ? '최신순 <span>NEW → OLD</span>' : '오래된순 <span>OLD → NEW</span>';
+  const list = ITEMS.filter(i=>cat==='all'||i.cat===cat)
+    .sort((a,b)=> sort==='new' ? (b.date.localeCompare(a.date)||b.no-a.no) : (a.date.localeCompare(b.date)||a.no-b.no));
+  $('shelf').innerHTML = list.map(card).join('') + `
+    <div class="soon" aria-label="다음 카트리지 제작 중">
+      <b>NEXT CARTRIDGE · NO.${pad(Math.max(...ITEMS.map(i=>i.no))+1)}</b>
+      <div class="loader" aria-hidden="true"><span id="ldBar">[□□□□□□□□□□]</span><span class="pct" id="ldPct">0%</span></div>
+      <div class="loader-msg" id="ldMsg">제작 중…</div>
+    </div>`;
+  document.querySelectorAll('.cart').forEach(a=>A.navigateWithSound(a,'insert',520));
+  startLoader();
 }
-$('tabs').addEventListener('click',e=>{
+$('tabs').addEventListener('click', e=>{
   const t=e.target.closest('.tab'); if(!t) return;
-  const k=t.dataset.k; history.replaceState(null,'',k==='all'?location.pathname:'#'+k); render(k);
+  cat = t.dataset.k in CATS ? t.dataset.k : 'all';
+  history.replaceState(null,'', cat==='all' ? location.pathname : '#'+cat);
+  render();
 });
-window.addEventListener('hashchange',()=>render(location.hash.slice(1)));
-render(location.hash.slice(1));
+$('sortBtn').addEventListener('click', ()=>{ sort = sort==='new' ? 'old' : 'new'; render(); });
+window.addEventListener('hashchange', ()=>{ const h=location.hash.slice(1); cat = h in CATS ? h : 'all'; render(); });
+cat = location.hash.slice(1) in CATS ? location.hash.slice(1) : 'all';
 
-$('copyMail').onclick=async()=>{
-  const m='lumimori38@gmail.com'; let ok=false;
-  try{await navigator.clipboard.writeText(m); ok=true;}catch(e){}
-  const t=$('toast'); t.textContent=ok?'메일 주소 복사 완료!':m; t.classList.add('show');
-  clearTimeout(t._t); t._t=setTimeout(()=>t.classList.remove('show'),1800);
-};
+/* 픽셀 로딩바: 올라가다 99%에서 멈칫 → 다시 */
+let ldTimer=null;
+const MSGS=['제작 중…','도트 찍는 중…','버그 잡는 중…','B급 농도 조절 중…','거의 다 됨 (아님)'];
+function startLoader(){
+  clearInterval(ldTimer); let p=0, hold=0;
+  ldTimer=setInterval(()=>{
+    const bar=$('ldBar'), pct=$('ldPct'), msg=$('ldMsg'); if(!bar){ clearInterval(ldTimer); return; }
+    if(p>=99){ if(++hold>8){ p=0; hold=0; } }
+    else p=Math.min(99, p+Math.ceil(Math.random()*7));
+    const f=Math.floor(p/10);
+    bar.textContent='['+'■'.repeat(f)+'□'.repeat(10-f)+']';
+    pct.textContent=p+'%';
+    msg.textContent = p>=99 ? MSGS[4] : MSGS[Math.floor(p/25)%4];
+  }, 420);
+}
+render();
+
+/* 히어로 버튼 */
+$('btnShare').addEventListener('click', async ()=>{
+  const ok = await A.copyText(A.SITE.url);
+  A.toast(ok ? '링크 복사 완료! 친구에게 오락실을 소개해 주세요' : A.SITE.url);
+});
+if(A.isStandalone()) $('btnInstall').style.display='none';
+$('btnInstall').addEventListener('click', A.installApp);
+$('copyMail').addEventListener('click', async ()=>{
+  const ok = await A.copyText('lumimori38@gmail.com');
+  A.toast(ok ? '메일 주소 복사 완료!' : 'lumimori38@gmail.com');
+});
+
+/* DEV LOG 미리보기 (최신 2개) */
+A.navigateWithSound($('logMore'),'move',230);
+A.loadLogs().then(d=>{
+  const top=d.entries.slice(0,2);
+  $('logs').innerHTML = top.length ? top.map(e=>{
+    const t=A.TAGS[e.tag]||A.TAGS.UPDATE;
+    return `<a class="logrow" href="/log.html#${encodeURIComponent(e.id)}">
+      <span class="ltag" style="--t:${t.color}">${A.pixIcon(t.icon,'#fff')}${e.tag}</span>
+      <span class="ltitle">${A.esc(e.title)}</span>
+      <span class="ldate">${A.fmtDate(e.date).slice(5)}</span></a>`;
+  }).join('') : '<div class="empty">아직 기록이 없어요</div>';
+  document.querySelectorAll('.logrow').forEach(a=>A.navigateWithSound(a,'move',230));
+});
 </script>
 </body>
 </html>

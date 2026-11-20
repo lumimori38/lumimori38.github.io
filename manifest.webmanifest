@@ -1,0 +1,16 @@
+{
+  "name": "루미 오락실",
+  "short_name": "루미 오락실",
+  "description": "쓸데없이 진심인 B급 테스트와 웹게임 모음 (lumimori38)",
+  "lang": "ko",
+  "start_url": "/?source=homescreen",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#f6efe6",
+  "theme_color": "#ffd23f",
+  "icons": [
+    { "src": "/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "/icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}
