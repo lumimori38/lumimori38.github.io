@@ -29,7 +29,7 @@
 <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/galmuri@2.40.3/dist/galmuri.css">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
-<link rel="stylesheet" href="/style.css?v=12">
+<link rel="stylesheet" href="/style.css?v=13">
 </head>
 <body>
 <div class="wrap">
@@ -74,6 +74,8 @@
       <button class="ibtn" id="copyMail" type="button" aria-label="메일 주소 복사" title="주소 복사"><svg viewBox="0 0 24 24"><path d="M8 3h11a2 2 0 0 1 2 2v11h-2V5H8V3zM5 7h10a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V9a2 2 0 0 1 2-2zm0 2v10h10V9H5z"/></svg></button>
     </div>
   </section>
+
+  <a class="logline" id="logLine" href="#log" aria-label="최신 DEV LOG 보기"><span class="lk">DEV LOG</span><span class="lt" id="logLineBody">불러오는 중…</span><span class="la">▶</span></a>
 
   <nav class="tabs" id="tabs" aria-label="카테고리"></nav>
   <div class="search">
@@ -207,15 +209,25 @@ function card(i) {
   return `<a class="cart" href="${i.url}" style="--c:${c.color};--c2:${c.dark}" aria-label="NO.${pad(i.no)} ${A.esc(i.title)}">\n    <div class="label">\n      <img class="thumb" src="${i.img}" alt="" loading="lazy">\n      <div class="info">\n        <div class="chips"><span class="chip cat">${c.name}</span>${isNew(i.date) ? '<span class="chip new">NEW</span>' : ""}${(i.tags || []).map(t => `<span class="chip">${A.esc(t)}</span>`).join("")}</div>\n        <div class="title">${A.esc(i.title)}</div>\n        ${i.sub ? `<div class="sub">${A.esc(i.sub)}</div>` : ""}\n        <p class="desc">${A.esc(i.desc)}</p>\n      </div>\n    </div>\n    <div class="bottom"><span class="serial"><i></i>NO.${pad(i.no)}</span><span class="play"><span class="bounce">${c.cta.split(" ")[0]}</span> ${c.cta.split(" ").slice(1).join(" ")}</span></div>\n  </a>`;
 }
 
+const LIMIT = 6;
+let expanded = false;
+
 function render() {
   document.querySelectorAll(".tab").forEach(t => t.classList.toggle("on", t.dataset.k === cat));
   $("secName").textContent = cat === "all" ? "ALL CARTRIDGES" : CATS[cat].en;
   $("sortBtn").innerHTML = (sort === "new" ? "최신순" : "오래된순") + '<span class="sw">⇅</span>';
   $("sortBtn").setAttribute("aria-label", "정렬 바꾸기 (현재 " + (sort === "new" ? "최신순" : "오래된순") + ")");
   const list = ITEMS.filter(i => (cat === "all" || i.cat === cat) && hit(i)).sort((a, b) => sort === "new" ? b.date.localeCompare(a.date) || b.no - a.no : a.date.localeCompare(b.date) || a.no - b.no);
-  $("shelf").innerHTML = list.map(card).join("") + (q ? (list.length ? "" : '<div class="empty none">검색 결과가 없어요</div>') : `\n    <div class="soon" aria-label="다음 카트리지 제작 중">\n      <b>NEXT CARTRIDGE · NO.${pad(Math.max(...ITEMS.map(i => i.no)) + 1)}</b>\n      <div class="loader" aria-hidden="true"><span id="ldBar">[□□□□□□□□□□]</span><span class="pct" id="ldPct">0%</span></div>\n      <div class="loader-msg" id="ldMsg">제작 중…</div>\n    </div>`);
+  const folded = cat === "all" && !q && !expanded && list.length > LIMIT;
+  const shown = folded ? list.slice(0, LIMIT) : list;
+  $("shelf").innerHTML = shown.map(card).join("") + (folded ? `<button class="moreCart" id="moreCart" type="button" aria-label="카트리지 ${list.length - LIMIT}개 더 보기"><span class="stack">${list.slice(LIMIT, LIMIT + 3).map(i => `<i style="--c:${(CATS[i.cat] || {}).color};--c2:${(CATS[i.cat] || {}).dark}"></i>`).join("")}</span><span class="mt">▼ 카트리지 ${list.length - LIMIT}개 더 꺼내기</span></button>` : q ? (list.length ? "" : '<div class="empty none">검색 결과가 없어요</div>') : `\n    <div class="soon" aria-label="다음 카트리지 제작 중">\n      <b>NEXT CARTRIDGE · NO.${pad(Math.max(...ITEMS.map(i => i.no)) + 1)}</b>\n      <div class="loader" aria-hidden="true"><span id="ldBar">[□□□□□□□□□□]</span><span class="pct" id="ldPct">0%</span></div>\n      <div class="loader-msg" id="ldMsg">제작 중…</div>\n    </div>`);
   document.querySelectorAll(".cart").forEach(a => A.navigateWithSound(a, "insert", 520));
-  startLoader();
+  if (folded) $("moreCart").addEventListener("click", () => {
+    expanded = true;
+    render();
+    document.querySelectorAll(".cart").forEach((c, k) => { if (k >= LIMIT) c.style.animation = `cartin .35s ${(k - LIMIT) * .06}s both`; });
+  });
+  else startLoader();
 }
 
 $("tabs").addEventListener("click", e => {
@@ -360,6 +372,12 @@ $("copyMail").addEventListener("click", async () => {
 
 getAllLogs().then(d => {
   const top = d.entries.slice(0, 2);
+  const f = d.entries[0];
+  if (f) {
+    const ft = A.TAGS[f.tag] || A.TAGS.UPDATE;
+    $("logLine").href = "#log=" + encodeURIComponent(f.id);
+    $("logLineBody").innerHTML = `<span class="ltag" style="--t:${ft.color}">${A.pixIcon(ft.icon, "#fff")}${f.tag}</span><span class="ltitle">${A.esc(f.title)}</span>`;
+  } else $("logLine").hidden = true;
   $("logs").innerHTML = top.length ? top.map(e => {
     const t = A.TAGS[e.tag] || A.TAGS.UPDATE;
     return `<a class="logrow" href="#log=${encodeURIComponent(e.id)}">\n      <span class="ltag" style="--t:${t.color}">${A.pixIcon(t.icon, "#fff")}${e.tag}</span>\n      <span class="ltitle">${A.esc(e.title)}</span>\n      <span class="ldate">${A.fmtDate(e.date).slice(5)}</span></a>`;
