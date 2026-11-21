@@ -282,7 +282,7 @@ function getAllLogs() {
 
 const sndEl = $("snd"), sndHome = sndEl.parentNode;
 
-let view = "home", homeY = 0, fromHome = false;
+let view = "home", homeY = 0, fromHome = false, booted = false;
 
 function showView(v, id) {
   if (v === view && v !== "log") return;
@@ -301,7 +301,7 @@ function showView(v, id) {
 function route() {
   const h = decodeURIComponent(location.hash.slice(1));
   if (h === "log" || h.startsWith("log=")) {
-    fromHome = view === "home";
+    fromHome = booted && view === "home";
     showView("log", h.slice(4));
   } else {
     showView("home");
@@ -321,7 +321,11 @@ document.addEventListener("click", e => {
 
 $("logBack").addEventListener("click", () => {
   A.play("move");
-  if (fromHome) history.back(); else location.hash = "";
+  if (fromHome) history.back();
+  else {
+    history.replaceState(null, "", location.pathname);
+    route();
+  }
 });
 
 cat = location.hash.slice(1) in CATS ? location.hash.slice(1) : "all";
@@ -449,6 +453,7 @@ getAllLogs().then(d => {
 })();
 
 route();
+booted = true;
 </script>
 </body>
 </html>
