@@ -30,7 +30,7 @@
 <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/galmuri@2.40.3/dist/galmuri.css">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
-<link rel="stylesheet" href="/style.css?v=16">
+<link rel="stylesheet" href="/style.css?v=17">
 </head>
 <body>
 <div class="wrap">
@@ -144,10 +144,19 @@ const CATS = {
     color: "#38b6ff",
     dark: "#1d86cc",
     cta: "■ OPEN"
+  },
+  story: {
+    name: "스토리",
+    en: "STORIES",
+    one: "STORY",
+    color: "#a98bff",
+    dark: "#7a5ce0",
+    cta: "☾ READ"
   }
 };
 
-const ITEMS = [{no:8,cat:"tool",date:"2026-11-26",title:"언제 볼까?",sub:"모임 시간 정하기",desc:"후보 날짜를 골라 링크를 보내면 친구들이 되는 시간을 칠하고, 모두 되는 시간이 한눈에 보이는 약속 시간 정하기 툴.",url:"https://lumimori38.github.io/meet-time/",img:"https://lumimori38.github.io/meet-time/og-image.png",tags:["링크 공유","최대 14일"]},
+const ITEMS = [{no:9,cat:"story",date:"2026-11-28",title:"0.8초",sub:"마지막 도서관 운영 일지",desc:"아무도 오지 않는 도서관에\n매일 밤 23시, 관측소의 전화가 걸려 온다.",url:"https://lumimori38.github.io/point-eight/",img:"https://lumimori38.github.io/point-eight/og-image-v2.png",tags:["인터랙티브 단편","약 15분"]},
+{no:8,cat:"tool",date:"2026-11-26",title:"언제 볼까?",sub:"모임 시간 정하기",desc:"후보 날짜를 골라 링크를 보내면 친구들이 되는 시간을 칠하고, 모두 되는 시간이 한눈에 보이는 약속 시간 정하기 툴.",url:"https://lumimori38.github.io/meet-time/",img:"https://lumimori38.github.io/meet-time/og-image.png",tags:["링크 공유","최대 14일"]},
 {no:7,cat:"game",date:"2026-11-25",title:"고요, 나의 작은 세계",sub:"소리로 쉬어 가는 작은 방",desc:"비 오는 차 안, 벽난로, 새벽 산사, 바닷가, 눈 오는 기차, 심야 편의점. 좋아하는 공간을 골라 소리를 맞추고 쉬어 가는 곳.",url:"https://lumimori38.github.io/goyo/",img:"https://lumimori38.github.io/goyo/og-image.png",tags:["공간 6곳","힐링"]},
 {no:6,cat:"game",date:"2026-11-23",title:"방콕 템플",sub:"러이끄라통 소원 띄우기",desc:"태국 사원 마당을 꾸미고, 소원을 담은 끄라통과 콤로이를 띄우고, 씨암시로 오늘의 운세까지 뽑아 보는 러이끄라통 놀이.",url:"https://lumimori38.github.io/bangkok-temple/",img:"https://lumimori38.github.io/bangkok-temple/og-image.png",tags:["마당 꾸미기","3개 언어"]},
 {no:5,cat:"tool",date:"2026-11-22",title:"연말결산 메이커",sub:"올해의 덕질 9칸 결산",desc:"아이돌·야구·연뮤부터 벨드·애니·게임까지, 주제별 질문에 사진과 한 줄을 채워 나만의 연말결산 카드를 만드는 툴.",url:"https://lumimori38.github.io/yearend-maker/",img:"https://lumimori38.github.io/yearend-maker/og-image.png",tags:["카테고리 10종","카드 4색"]},
@@ -200,7 +209,7 @@ const norm = v => String(v || "").toLowerCase().replace(/\s+/g, "");
 
 const hit = i => !q || norm([ i.title, i.sub, (CATS[i.cat] || {}).name, ...i.tags || [] ].join(" ")).includes(q);
 
-$("stats").innerHTML = Object.entries(CATS).map(([k, v]) => `${v.en.slice(0, -1)} ${count(k)}`).join("<br>");
+$("stats").innerHTML = Object.entries(CATS).map(([k, v]) => `${v.one || v.en.slice(0, -1)} ${count(k)}`).join("<br>");
 
 $("tabs").innerHTML = [ [ "all", "전체", ITEMS.length ], ...Object.entries(CATS).map(([k, v]) => [ k, v.name, count(k) ]) ].map(([k, n, c]) => `<button class="tab" type="button" data-k="${k}">${n}<span class="n">${c}</span></button>`).join("");
 
