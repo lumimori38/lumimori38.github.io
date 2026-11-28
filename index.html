@@ -30,7 +30,7 @@
 <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/galmuri@2.40.3/dist/galmuri.css">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
-<link rel="stylesheet" href="/style.css?v=17">
+<link rel="stylesheet" href="/style.css?v=18">
 </head>
 <body>
 <div class="wrap">
@@ -406,7 +406,8 @@ getAllLogs().then(d => {
 (function() {
   let data = {
     entries: []
-  }, filter = "ALL";
+  }, filter = "ALL", logExpanded = false;
+  const LOG_LIMIT = 6;
   $("logLegend").innerHTML = Object.entries(A.TAGS).map(([k, t]) => `<span><span class="ltag" style="--t:${t.color}">${A.pixIcon(t.icon, "#fff")}${k}</span>${t.ko}</span>`).join("");
   function renderTabs() {
     const c = k => k === "ALL" ? data.entries.length : data.entries.filter(e => e.tag === k).length;
@@ -414,7 +415,10 @@ getAllLogs().then(d => {
   }
   function render() {
     renderTabs();
-    const list = data.entries.filter(e => filter === "ALL" || e.tag === filter);
+    const all = data.entries.filter(e => filter === "ALL" || e.tag === filter);
+    if (focusId && all.findIndex(e => e.id === focusId) >= LOG_LIMIT) logExpanded = true;
+    const folded = filter === "ALL" && !logExpanded && all.length > LOG_LIMIT;
+    const list = folded ? all.slice(0, LOG_LIMIT) : all;
     if (!list.length) {
       $("logList").innerHTML = '<div class="empty2">아직 기록이 없어요</div>';
       return;
@@ -429,7 +433,14 @@ getAllLogs().then(d => {
       const link = e.link ? A.safeUrl(e.link) : "";
       html += `<article class="entry" id="${A.esc(e.id)}" style="--t:${t.color}">\n      <div class="ehead"><span class="ltag" style="--t:${t.color}">${A.pixIcon(t.icon, "#fff")}${A.esc(e.tag)}</span><span class="ldate">${A.fmtDate(e.date)}</span>\n</div>\n      <h2 class="etitle">${A.esc(e.title)}</h2>\n      ${e.body ? `<p class="ebody">${A.esc(e.body)}</p>` : ""}\n      ${link ? `<a class="elink ui-link" href="${A.esc(link)}" target="_blank" rel="noopener noreferrer">관련 링크 ▶</a>` : ""}\n    </article>`;
     });
+    if (folded) html += `<button class="moreLog" id="moreLog" type="button"><span class="mt">지난 기록 ${all.length - LOG_LIMIT}개 더 보기 <b>▼</b></span></button>`;
     $("logList").innerHTML = html;
+    $("logList").classList.toggle("folded", folded);
+    if (folded) $("moreLog").addEventListener("click", () => {
+      logExpanded = true;
+      render();
+      document.querySelectorAll("#logList .entry").forEach((el, k) => { if (k >= LOG_LIMIT) el.style.animation = `cartin .35s ${Math.min(k - LOG_LIMIT, 6) * .05}s both`; });
+    });
     if (focusId) {
       const el = document.getElementById(focusId);
       if (el) {
