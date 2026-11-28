@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-11-28T06:00:00.000Z",
+  "updatedAt": "2026-11-28T06:10:00.000Z",
   "entries": [
     {
       "id": "20261120-open1",
@@ -34,33 +34,33 @@
       "link": ""
     },
     {
-      "id": "dev-20261122-hard",
+      "id": "tmi-20261121-dev-hard",
       "tag": "DEV",
-      "date": "2026-11-22",
+      "date": "2026-11-21",
       "title": "'이거 너무 어려워'라는 피드백",
       "body": "조작, 난이도, 폰트 전부 지적받았다.\n만든 사람은 손에 익어서 몰랐던 부분.\n폰트는 갈무리11로, 난이도는 속도와 아이템 수로 다시 맞췄다.",
       "link": "https://lumimori38.github.io/musa-landing/"
     },
     {
-      "id": "dev-20261126-firebase",
+      "id": "dev-20261122-firebase",
       "tag": "DEV",
-      "date": "2026-11-26",
+      "date": "2026-11-22",
       "title": "Firebase를 처음 붙여 봤다",
       "body": "여럿이 동시에 시간을 칠하려면 서버가 필요해서 처음 써 봤다.\n회사에서 구경이나 하던 걸 직접 써 보다니.\n각자 칠한 시간이 실시간으로 바뀌는 걸 본 순간 <- 이 부분 진짜 감동",
       "link": "https://lumimori38.github.io/meet-time/"
     },
     {
-      "id": "dev-20261122-border",
+      "id": "dev-20261123-border",
       "tag": "DEV",
-      "date": "2026-11-22",
+      "date": "2026-11-23",
       "title": "블록 테두리를 없앴더니",
       "body": "처음엔 블록마다 까만 테두리가 있었다.\n빼고 나니 더 눈에 잘 들어오는 느낌.",
       "link": "https://lumimori38.github.io/bangkok-temple/"
     },
     {
-      "id": "dev-20261124-linebreak",
+      "id": "dev-20261120-linebreak",
       "tag": "DEV",
-      "date": "2026-11-24",
+      "date": "2026-11-20",
       "title": "줄바꿈에 집착하는 사람",
       "body": "출판사 편집자 출신이라 한 글자만 툭 떨어진 문구를 못 참는다.\n그래서 화면 문구는 최대한 의미 단위로 끊는다.\n아무도 모를 수도 있다. 그래도 나는 안다.",
       "link": ""
