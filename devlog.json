@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-11-28T06:10:00.000Z",
+  "updatedAt": "2026-11-28T06:15:00.000Z",
   "entries": [
     {
       "id": "20261120-open1",
@@ -42,9 +42,9 @@
       "link": "https://lumimori38.github.io/musa-landing/"
     },
     {
-      "id": "dev-20261122-firebase",
+      "id": "dev-20261126-firebase",
       "tag": "DEV",
-      "date": "2026-11-22",
+      "date": "2026-11-26",
       "title": "Firebase를 처음 붙여 봤다",
       "body": "여럿이 동시에 시간을 칠하려면 서버가 필요해서 처음 써 봤다.\n회사에서 구경이나 하던 걸 직접 써 보다니.\n각자 칠한 시간이 실시간으로 바뀌는 걸 본 순간 <- 이 부분 진짜 감동",
       "link": "https://lumimori38.github.io/meet-time/"
